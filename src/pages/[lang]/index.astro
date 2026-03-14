@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroSection from '../../components/home/HeroSection.astro';
+import FeaturedProducts from '../../components/home/FeaturedProducts.astro';
+import WhyVectra from '../../components/home/WhyVectra.astro';
+import CTASection from '../../components/home/CTASection.astro';
+import ShoppingCart from '../../components/products/ShoppingCart';
+import { useTranslations, type Lang } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = useTranslations(lang);
+---
+
+<BaseLayout
+  title={lang === 'es' ? 'Inicio' : 'Home'}
+  description={lang === 'es'
+    ? 'Vectra — Impresión 3D de alta calidad. Productos personalizados con precisión y tecnología de punta.'
+    : 'Vectra — High quality 3D printing. Custom products with precision and cutting-edge technology.'}
+  lang={lang}
+>
+  <HeroSection lang={lang} />
+  <FeaturedProducts lang={lang} />
+  <WhyVectra lang={lang} />
+  <CTASection lang={lang} />
+
+  <!-- Cart drawer (React island) -->
+  <ShoppingCart lang={lang} client:load />
+</BaseLayout>

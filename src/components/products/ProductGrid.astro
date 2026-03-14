@@ -1,0 +1,50 @@
+---
+import ProductCard from './ProductCard.astro';
+import { useTranslations, type Lang } from '../../i18n/ui';
+
+interface Product {
+  id: string;
+  data: {
+    name: string;
+    price: number;
+    image: string;
+    category: string;
+    inStock: boolean;
+    shortDescription: string;
+  };
+}
+
+interface Props {
+  lang: Lang;
+  products: Product[];
+}
+
+const { lang, products } = Astro.props;
+const t = useTranslations(lang);
+---
+
+{products.length === 0 ? (
+  <div class="text-center py-20">
+    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-[var(--bg-secondary)] flex items-center justify-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--text-muted)]">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </div>
+    <p class="text-[var(--text-muted)]">{t('products.empty')}</p>
+  </div>
+) : (
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    {products.map((product) => (
+      <ProductCard
+        lang={lang}
+        slug={product.id}
+        name={product.data.name}
+        price={product.data.price}
+        image={product.data.image}
+        category={product.data.category}
+        inStock={product.data.inStock}
+        shortDescription={product.data.shortDescription}
+      />
+    ))}
+  </div>
+)}

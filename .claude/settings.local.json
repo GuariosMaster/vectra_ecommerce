@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git --version)",
+      "Bash(powershell -Command:*)",
+      "WebFetch(domain:www.webreactiva.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(gh:*)",
+      "mcp__claude_ai_Figma__get_metadata",
+      "mcp__claude_ai_Figma__get_figjam",
+      "mcp__claude_ai_Figma__get_design_context",
+      "Bash(node --version:*)",
+      "Bash(npm --version:*)",
+      "Bash(npm create:*)",
+      "Bash(dir:*)"
+    ]
+  }
+}

@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import ProductCard from '../products/ProductCard.astro';
+import { useTranslations, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const allProducts = await getCollection('products');
+// In Astro 5 Content Layer API, use .id instead of .slug
+const featured = allProducts.filter((p) => p.data.featured).slice(0, 4);
+---
+
+<section class="py-20 bg-[var(--bg)]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-end justify-between mb-12">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-black text-[var(--text)] mb-2">
+          {t('featured.title')}
+        </h2>
+        <p class="text-[var(--text-muted)]">{t('featured.subtitle')}</p>
+      </div>
+      <a
+        href={`/${lang}/products`}
+        class="hidden sm:inline-flex items-center gap-2 text-[var(--primary)] font-medium
+               hover:underline transition-colors"
+      >
+        {t('featured.viewAll')}
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+
+    {featured.length > 0 ? (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {featured.map((product) => (
+          <ProductCard
+            lang={lang}
+            slug={product.id}
+            name={product.data.name}
+            price={product.data.price}
+            image={product.data.image}
+            category={product.data.category}
+            inStock={product.data.inStock}
+            shortDescription={product.data.shortDescription}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-12 text-[var(--text-muted)]">
+        {lang === 'es' ? 'Cargando productos...' : 'Loading products...'}
+      </div>
+    )}
+
+    <div class="mt-8 text-center sm:hidden">
+      <a
+        href={`/${lang}/products`}
+        class="inline-flex items-center gap-2 text-[var(--primary)] font-medium hover:underline"
+      >
+        {t('featured.viewAll')}
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>

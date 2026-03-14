@@ -1,0 +1,128 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "products": "Productos",
+    "blog": "Blog",
+    "personalization": "Personalización",
+    "cart": "Carrito",
+    "admin": "Admin"
+  },
+  "hero": {
+    "badge": "Impresión 3D de Alta Calidad",
+    "title": "Lleva tus ideas",
+    "titleHighlight": "al siguiente nivel",
+    "subtitle": "Diseñamos y fabricamos productos 3D personalizados con la más alta precisión y calidad.",
+    "ctaPrimary": "Ver Productos",
+    "ctaSecondary": "Personalizar"
+  },
+  "featured": {
+    "title": "Productos Destacados",
+    "subtitle": "Nuestra selección de productos más populares",
+    "viewAll": "Ver todos"
+  },
+  "why": {
+    "title": "¿Por qué Vectra?",
+    "subtitle": "Combinamos tecnología de punta con diseño excepcional",
+    "quality": {
+      "title": "Alta Calidad",
+      "desc": "Materiales premium y acabados perfectos en cada pieza"
+    },
+    "precision": {
+      "title": "Máxima Precisión",
+      "desc": "Tecnología de última generación para resultados impecables"
+    },
+    "custom": {
+      "title": "100% Personalizable",
+      "desc": "Cada producto adaptado exactamente a tus necesidades"
+    },
+    "fast": {
+      "title": "Entrega Rápida",
+      "desc": "Producción ágil sin sacrificar la calidad"
+    }
+  },
+  "cta": {
+    "title": "¿Tienes un proyecto en mente?",
+    "subtitle": "Cuéntanos tu idea y la hacemos realidad",
+    "button": "Empezar ahora"
+  },
+  "products": {
+    "title": "Catálogo de Productos",
+    "subtitle": "Encuentra el producto perfecto para ti",
+    "filters": {
+      "search": "Buscar productos...",
+      "category": "Categoría",
+      "all": "Todos",
+      "price": "Precio",
+      "inStock": "Solo disponibles"
+    },
+    "addToCart": "Agregar al carrito",
+    "outOfStock": "Sin stock",
+    "viewDetails": "Ver detalles",
+    "price": "Precio",
+    "empty": "No se encontraron productos"
+  },
+  "cart": {
+    "title": "Tu carrito",
+    "empty": "El carrito está vacío",
+    "total": "Total",
+    "checkout": "Finalizar compra",
+    "remove": "Eliminar",
+    "continue": "Seguir comprando"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Noticias, tutoriales y novedades sobre impresión 3D",
+    "readMore": "Leer más",
+    "by": "Por",
+    "min": "min de lectura"
+  },
+  "personalization": {
+    "title": "Personaliza tu producto",
+    "subtitle": "Cuéntanos qué necesitas y lo hacemos realidad",
+    "step1": {
+      "title": "Describe tu producto",
+      "placeholder": "¿Qué producto necesitas? Describe materiales, dimensiones, uso..."
+    },
+    "step2": {
+      "title": "Referencia visual",
+      "uploadLabel": "Sube una imagen de referencia",
+      "urlLabel": "O pega una URL de imagen",
+      "urlPlaceholder": "https://..."
+    },
+    "step3": {
+      "title": "Tus datos de contacto",
+      "name": "Nombre",
+      "email": "Email",
+      "phone": "Teléfono"
+    },
+    "step4": {
+      "title": "¡Listo!",
+      "message": "Recibimos tu solicitud. Te contactaremos pronto.",
+      "whatsapp": "Enviar por WhatsApp",
+      "email": "Enviar por Email"
+    },
+    "next": "Siguiente",
+    "back": "Atrás",
+    "send": "Enviar solicitud"
+  },
+  "footer": {
+    "tagline": "Impresión 3D de alta calidad",
+    "links": "Enlaces",
+    "contact": "Contacto",
+    "rights": "Todos los derechos reservados"
+  },
+  "admin": {
+    "login": {
+      "title": "Acceso Admin",
+      "password": "Contraseña",
+      "submit": "Ingresar",
+      "error": "Contraseña incorrecta"
+    },
+    "dashboard": {
+      "title": "Panel de Control",
+      "products": "Productos",
+      "posts": "Posts",
+      "visitors": "Visitantes"
+    }
+  }
+}

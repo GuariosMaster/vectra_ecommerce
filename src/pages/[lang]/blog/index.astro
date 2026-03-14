@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogList from '../../../components/blog/BlogList.astro';
+import { useTranslations, type Lang } from '../../../i18n/ui';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = useTranslations(lang);
+
+const allPosts = await getCollection('blog', (post) => !post.data.draft);
+const posts = allPosts
+  .filter((p) => p.data.lang === lang)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout
+  title={t('blog.title')}
+  description={t('blog.subtitle')}
+  lang={lang}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-10">
+      <h1 class="text-4xl font-black text-[var(--text)] mb-2">{t('blog.title')}</h1>
+      <p class="text-[var(--text-muted)]">{t('blog.subtitle')}</p>
+    </div>
+    <BlogList lang={lang} posts={posts} />
+  </div>
+</BaseLayout>

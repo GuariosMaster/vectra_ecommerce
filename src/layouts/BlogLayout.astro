@@ -1,0 +1,88 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { getLangFromUrl } from '../i18n/ui';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  author: string;
+  coverImage: string;
+  tags?: string[];
+}
+
+const { title, description, date, author, coverImage, tags = [] } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const dateISO = date.toISOString();
+const dateFormatted = date.toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const articleSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  author: { '@type': 'Person', name: author },
+  datePublished: dateISO,
+  image: new URL(coverImage, Astro.site).toString(),
+  url: canonicalURL.toString(),
+  publisher: {
+    '@type': 'Organization',
+    name: 'Vectra',
+    logo: { '@type': 'ImageObject', url: new URL('/favicon.svg', Astro.site).toString() },
+  },
+});
+---
+
+<BaseLayout title={title} description={description} image={coverImage} lang={lang}>
+  <script type="application/ld+json" set:html={articleSchema} />
+
+  <article class="max-w-3xl mx-auto px-4 py-12">
+    <!-- Cover Image -->
+    <div class="mb-8 rounded-2xl overflow-hidden aspect-video">
+      <img
+        src={coverImage}
+        alt={title}
+        class="w-full h-full object-cover"
+        loading="eager"
+      />
+    </div>
+
+    <!-- Header -->
+    <header class="mb-8">
+      {tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 mb-4">
+          {tags.map((tag) => (
+            <span class="px-3 py-1 text-xs font-medium rounded-full bg-[var(--primary)] text-white">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+      <h1 class="text-3xl md:text-4xl font-bold text-[var(--text)] mb-4">{title}</h1>
+      <div class="flex items-center gap-4 text-[var(--text-muted)] text-sm">
+        <span>{author}</span>
+        <span>·</span>
+        <time datetime={dateISO}>{dateFormatted}</time>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="prose prose-lg max-w-none
+      prose-headings:text-[var(--text)]
+      prose-p:text-[var(--text-muted)]
+      prose-a:text-[var(--primary)]
+      prose-strong:text-[var(--text)]
+      prose-code:text-[var(--primary)]
+      prose-pre:bg-[var(--bg-card)]
+      prose-blockquote:border-[var(--primary)]
+      dark:prose-invert">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

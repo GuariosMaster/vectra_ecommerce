@@ -1,0 +1,90 @@
+---
+import { useTranslations, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  slug: string;
+  name: string;
+  price: number;
+  image: string;
+  category: string;
+  inStock: boolean;
+  shortDescription: string;
+}
+
+const { lang, slug, name, price, image, category, inStock, shortDescription } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<article class="group bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl overflow-hidden
+                hover:border-[var(--primary)] hover:shadow-xl hover:-translate-y-1
+                transition-all duration-300 flex flex-col">
+
+  <!-- Image -->
+  <a href={`/${lang}/products/${slug}`} class="block overflow-hidden aspect-square bg-[var(--bg-secondary)]">
+    <img
+      src={image}
+      alt={name}
+      loading="lazy"
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+    />
+  </a>
+
+  <!-- Body -->
+  <div class="p-5 flex flex-col flex-1">
+    <div class="flex items-start justify-between gap-2 mb-2">
+      <span class="text-xs font-medium px-2 py-1 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] capitalize">
+        {category}
+      </span>
+      {!inStock && (
+        <span class="text-xs font-medium px-2 py-1 rounded-full bg-red-500/10 text-red-400">
+          {t('products.outOfStock')}
+        </span>
+      )}
+    </div>
+
+    <a href={`/${lang}/products/${slug}`} class="hover:text-[var(--primary)] transition-colors">
+      <h3 class="font-semibold text-[var(--text)] text-lg mb-1 line-clamp-2">{name}</h3>
+    </a>
+    <p class="text-[var(--text-muted)] text-sm line-clamp-2 mb-4 flex-1">{shortDescription}</p>
+
+    <!-- Price + Add to cart -->
+    <div class="flex items-center justify-between mt-auto">
+      <span class="text-2xl font-black text-[var(--text)]">
+        ${price.toFixed(2)}
+      </span>
+      {inStock ? (
+        <button
+          class="add-to-cart px-4 py-2 rounded-xl bg-[var(--primary)] text-white text-sm font-medium
+                 hover:bg-[var(--primary-hover)] transition-colors duration-200
+                 hover:shadow-lg active:scale-95"
+          data-product-id={slug}
+          data-product-name={name}
+          data-product-price={price}
+          data-product-image={image}
+          data-product-slug={slug}
+        >
+          {t('products.addToCart')}
+        </button>
+      ) : (
+        <span class="text-[var(--text-muted)] text-sm">{t('products.outOfStock')}</span>
+      )}
+    </div>
+  </div>
+</article>
+
+<script>
+  import { addToCart } from '../../stores/cart';
+
+  document.querySelectorAll<HTMLButtonElement>('.add-to-cart').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      addToCart({
+        id: btn.dataset.productId!,
+        name: btn.dataset.productName!,
+        price: parseFloat(btn.dataset.productPrice!),
+        image: btn.dataset.productImage!,
+        slug: btn.dataset.productSlug!,
+      });
+    });
+  });
+</script>

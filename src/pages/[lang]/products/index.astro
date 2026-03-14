@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ProductGrid from '../../../components/products/ProductGrid.astro';
+import ShoppingCart from '../../../components/products/ShoppingCart';
+import { useTranslations, type Lang } from '../../../i18n/ui';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = useTranslations(lang);
+
+const allProducts = await getCollection('products');
+const products = allProducts.sort((a, b) => (a.data.featured ? -1 : 1));
+---
+
+<BaseLayout
+  title={t('products.title')}
+  description={t('products.subtitle')}
+  lang={lang}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Header -->
+    <div class="mb-10">
+      <h1 class="text-4xl font-black text-[var(--text)] mb-2">{t('products.title')}</h1>
+      <p class="text-[var(--text-muted)]">{t('products.subtitle')}</p>
+    </div>
+
+    <!-- Grid (static, no client-side filter yet) -->
+    <ProductGrid lang={lang} products={products} />
+  </div>
+
+  <ShoppingCart lang={lang} client:load />
+</BaseLayout>

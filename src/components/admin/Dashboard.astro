@@ -1,0 +1,119 @@
+---
+import { getCollection } from 'astro:content';
+
+const products = await getCollection('products');
+const posts = await getCollection('blog');
+
+const stats = [
+  {
+    label: 'Productos',
+    value: products.length,
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>`,
+    color: 'text-blue-400',
+    bg: 'bg-blue-500/10',
+    href: '/admin/products',
+  },
+  {
+    label: 'Blog Posts',
+    value: posts.length,
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`,
+    color: 'text-purple-400',
+    bg: 'bg-purple-500/10',
+    href: '/admin/blog',
+  },
+  {
+    label: 'En stock',
+    value: products.filter((p) => p.data.inStock).length,
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+    color: 'text-green-400',
+    bg: 'bg-green-500/10',
+  },
+  {
+    label: 'Destacados',
+    value: products.filter((p) => p.data.featured).length,
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    color: 'text-yellow-400',
+    bg: 'bg-yellow-500/10',
+  },
+];
+---
+
+<div>
+  <h2 class="text-2xl font-bold text-[var(--text)] mb-6">Panel de Control</h2>
+
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    {stats.map(({ label, value, icon, color, bg, href }) => (
+      <div class:list={[
+        'p-5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--primary)] transition-colors',
+        href ? 'cursor-pointer' : '',
+      ]}
+        onclick={href ? `window.location.href='${href}'` : undefined}
+      >
+        <div class={`w-10 h-10 rounded-xl ${bg} ${color} flex items-center justify-center mb-3`}
+             set:html={icon}
+        />
+        <div class="text-3xl font-black text-[var(--text)]">{value}</div>
+        <div class="text-sm text-[var(--text-muted)] mt-1">{label}</div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Quick links -->
+  <div class="grid md:grid-cols-2 gap-4">
+    <a href="/admin/products" class="flex items-center gap-4 p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]
+                                     hover:border-[var(--primary)] transition-colors group">
+      <div class="w-10 h-10 rounded-xl bg-[var(--primary)]/10 flex items-center justify-center text-[var(--primary)]
+                  group-hover:bg-[var(--primary)] group-hover:text-white transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[var(--text)]">Gestionar productos</div>
+        <div class="text-xs text-[var(--text-muted)]">Crear, editar y eliminar productos</div>
+      </div>
+    </a>
+
+    <a href="/admin/blog" class="flex items-center gap-4 p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]
+                                  hover:border-[var(--primary)] transition-colors group">
+      <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400
+                  group-hover:bg-purple-500 group-hover:text-white transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[var(--text)]">Gestionar blog</div>
+        <div class="text-xs text-[var(--text-muted)]">Crear, editar y publicar posts</div>
+      </div>
+    </a>
+
+    <a href="/admin/settings" class="flex items-center gap-4 p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]
+                                      hover:border-[var(--primary)] transition-colors group">
+      <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400
+                  group-hover:bg-green-500 group-hover:text-white transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M6.34 17.66l-1.41 1.41M2 12h2M20 12h2M19.07 19.07l-1.41-1.41M6.34 6.34L4.93 4.93M12 2v2M12 20v2"/>
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[var(--text)]">Configuración del sitio</div>
+        <div class="text-xs text-[var(--text-muted)]">Editar textos, redes sociales y contacto</div>
+      </div>
+    </a>
+
+    <a href="/es" target="_blank" class="flex items-center gap-4 p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]
+                                          hover:border-[var(--primary)] transition-colors group">
+      <div class="w-10 h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center text-yellow-400
+                  group-hover:bg-yellow-500 group-hover:text-white transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[var(--text)]">Ver sitio público</div>
+        <div class="text-xs text-[var(--text-muted)]">Abrir el sitio en una nueva pestaña</div>
+      </div>
+    </a>
+  </div>
+</div>

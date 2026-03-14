@@ -1,0 +1,128 @@
+{
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "blog": "Blog",
+    "personalization": "Customization",
+    "cart": "Cart",
+    "admin": "Admin"
+  },
+  "hero": {
+    "badge": "High Quality 3D Printing",
+    "title": "Take your ideas",
+    "titleHighlight": "to the next level",
+    "subtitle": "We design and manufacture custom 3D products with the highest precision and quality.",
+    "ctaPrimary": "View Products",
+    "ctaSecondary": "Customize"
+  },
+  "featured": {
+    "title": "Featured Products",
+    "subtitle": "Our selection of most popular products",
+    "viewAll": "View all"
+  },
+  "why": {
+    "title": "Why Vectra?",
+    "subtitle": "We combine cutting-edge technology with exceptional design",
+    "quality": {
+      "title": "High Quality",
+      "desc": "Premium materials and perfect finishes on every piece"
+    },
+    "precision": {
+      "title": "Maximum Precision",
+      "desc": "Latest generation technology for impeccable results"
+    },
+    "custom": {
+      "title": "100% Customizable",
+      "desc": "Every product adapted exactly to your needs"
+    },
+    "fast": {
+      "title": "Fast Delivery",
+      "desc": "Agile production without sacrificing quality"
+    }
+  },
+  "cta": {
+    "title": "Have a project in mind?",
+    "subtitle": "Tell us your idea and we'll make it happen",
+    "button": "Start now"
+  },
+  "products": {
+    "title": "Product Catalog",
+    "subtitle": "Find the perfect product for you",
+    "filters": {
+      "search": "Search products...",
+      "category": "Category",
+      "all": "All",
+      "price": "Price",
+      "inStock": "In stock only"
+    },
+    "addToCart": "Add to cart",
+    "outOfStock": "Out of stock",
+    "viewDetails": "View details",
+    "price": "Price",
+    "empty": "No products found"
+  },
+  "cart": {
+    "title": "Your cart",
+    "empty": "Cart is empty",
+    "total": "Total",
+    "checkout": "Checkout",
+    "remove": "Remove",
+    "continue": "Keep shopping"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "News, tutorials and updates about 3D printing",
+    "readMore": "Read more",
+    "by": "By",
+    "min": "min read"
+  },
+  "personalization": {
+    "title": "Customize your product",
+    "subtitle": "Tell us what you need and we'll make it real",
+    "step1": {
+      "title": "Describe your product",
+      "placeholder": "What product do you need? Describe materials, dimensions, use..."
+    },
+    "step2": {
+      "title": "Visual reference",
+      "uploadLabel": "Upload a reference image",
+      "urlLabel": "Or paste an image URL",
+      "urlPlaceholder": "https://..."
+    },
+    "step3": {
+      "title": "Your contact info",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone"
+    },
+    "step4": {
+      "title": "Done!",
+      "message": "We received your request. We'll contact you soon.",
+      "whatsapp": "Send via WhatsApp",
+      "email": "Send via Email"
+    },
+    "next": "Next",
+    "back": "Back",
+    "send": "Send request"
+  },
+  "footer": {
+    "tagline": "High quality 3D printing",
+    "links": "Links",
+    "contact": "Contact",
+    "rights": "All rights reserved"
+  },
+  "admin": {
+    "login": {
+      "title": "Admin Access",
+      "password": "Password",
+      "submit": "Login",
+      "error": "Wrong password"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "products": "Products",
+      "posts": "Posts",
+      "visitors": "Visitors"
+    }
+  }
+}

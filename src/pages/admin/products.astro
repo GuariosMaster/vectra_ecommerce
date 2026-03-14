@@ -1,0 +1,38 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import ProductsCRUD from '../../components/admin/ProductsCRUD';
+---
+
+<AdminLayout title="Productos — Admin">
+  <div class="flex min-h-screen">
+    <aside class="w-64 bg-[var(--bg-secondary)] border-r border-[var(--border)] p-6 hidden md:block">
+      <div class="flex items-center gap-2 mb-8">
+        <div class="w-8 h-8 rounded-lg bg-[var(--primary)] flex items-center justify-center">
+          <span class="text-white font-bold text-sm">V</span>
+        </div>
+        <span class="font-bold text-[var(--text)]">Vectra Admin</span>
+      </div>
+      <nav class="space-y-1">
+        {[
+          { href: '/admin/dashboard', label: 'Dashboard' },
+          { href: '/admin/products', label: 'Productos' },
+          { href: '/admin/blog', label: 'Blog' },
+          { href: '/admin/settings', label: 'Configuración' },
+        ].map(({ href, label }) => (
+          <a href={href} class:list={['flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors', Astro.url.pathname === href ? 'bg-[var(--primary)] text-white' : 'text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--bg-card)]']}>
+            {label}
+          </a>
+        ))}
+      </nav>
+    </aside>
+    <main class="flex-1 p-8">
+      <ProductsCRUD client:load />
+    </main>
+  </div>
+</AdminLayout>
+
+<script>
+  import { initAuth, authStore } from '../../stores/auth';
+  initAuth();
+  authStore.subscribe((state) => { if (!state.isAuthenticated) window.location.href = '/admin'; });
+</script>

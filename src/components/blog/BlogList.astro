@@ -1,0 +1,47 @@
+---
+import BlogCard from './BlogCard.astro';
+import { useTranslations, type Lang } from '../../i18n/ui';
+
+interface Post {
+  id: string;
+  data: {
+    title: string;
+    excerpt: string;
+    date: Date;
+    author: string;
+    coverImage: string;
+    tags?: string[];
+    readingTime?: number;
+  };
+}
+
+interface Props {
+  lang: Lang;
+  posts: Post[];
+}
+
+const { lang, posts } = Astro.props;
+const t = useTranslations(lang);
+---
+
+{posts.length === 0 ? (
+  <div class="text-center py-20 text-[var(--text-muted)]">
+    {lang === 'es' ? 'No hay posts todavía' : 'No posts yet'}
+  </div>
+) : (
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {posts.map((post) => (
+      <BlogCard
+        lang={lang}
+        slug={post.id}
+        title={post.data.title}
+        excerpt={post.data.excerpt}
+        date={post.data.date}
+        author={post.data.author}
+        coverImage={post.data.coverImage}
+        tags={post.data.tags}
+        readingTime={post.data.readingTime}
+      />
+    ))}
+  </div>
+)}

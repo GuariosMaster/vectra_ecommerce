@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PersonalizationForm from '../../components/personalization/PersonalizationForm';
+import { useTranslations, type Lang } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = useTranslations(lang);
+---
+
+<BaseLayout
+  title={t('personalization.title')}
+  description={t('personalization.subtitle')}
+  lang={lang}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-black text-[var(--text)] mb-4">{t('personalization.title')}</h1>
+      <p class="text-[var(--text-muted)] text-lg max-w-xl mx-auto">{t('personalization.subtitle')}</p>
+    </div>
+
+    <PersonalizationForm
+      lang={lang}
+      whatsappNumber={import.meta.env.PUBLIC_WHATSAPP_NUMBER}
+      contactEmail={import.meta.env.PUBLIC_CONTACT_EMAIL}
+      client:load
+    />
+  </div>
+</BaseLayout>

@@ -1,0 +1,139 @@
+---
+import ThemeToggle from './ThemeToggle';
+import LangSwitch from './LangSwitch.astro';
+import { useTranslations, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const navLinks = [
+  { href: `/${lang}`, label: t('nav.home') },
+  { href: `/${lang}/products`, label: t('nav.products') },
+  { href: `/${lang}/blog`, label: t('nav.blog') },
+  { href: `/${lang}/personalization`, label: t('nav.personalization') },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg)]/90 backdrop-blur-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo -->
+      <a href={`/${lang}`} class="flex items-center gap-2 group">
+        <div class="w-8 h-8 rounded-lg bg-[var(--primary)] flex items-center justify-center
+                    group-hover:scale-105 transition-transform duration-200">
+          <span class="text-white font-bold text-sm">V</span>
+        </div>
+        <span class="text-xl font-bold text-[var(--text)]">Vectra</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-1" aria-label="Main navigation">
+        {navLinks.map(({ href, label }) => (
+          <a
+            href={href}
+            class:list={[
+              'px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
+              currentPath === href || (href !== `/${lang}` && currentPath.startsWith(href))
+                ? 'bg-[var(--primary)] text-white'
+                : 'text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--bg-secondary)]',
+            ]}
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Right actions -->
+      <div class="flex items-center gap-2">
+        <!-- Cart icon (placeholder, filled by React island) -->
+        <div id="cart-toggle-wrapper">
+          <button
+            id="cart-btn"
+            aria-label={t('nav.cart')}
+            class="relative w-10 h-10 flex items-center justify-center rounded-lg
+                   hover:bg-[var(--bg-secondary)] transition-colors duration-200
+                   text-[var(--text-muted)] hover:text-[var(--text)]"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span
+              id="cart-count"
+              class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[var(--primary)] text-white
+                     text-xs font-bold flex items-center justify-center hidden"
+            >0</span>
+          </button>
+        </div>
+
+        <LangSwitch lang={lang} />
+        <ThemeToggle client:load />
+
+        <!-- Mobile menu toggle -->
+        <button
+          id="mobile-menu-btn"
+          aria-label="Toggle mobile menu"
+          class="md:hidden w-10 h-10 flex items-center justify-center rounded-lg
+                 hover:bg-[var(--bg-secondary)] transition-colors duration-200
+                 text-[var(--text-muted)] hover:text-[var(--text)]"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav -->
+    <nav id="mobile-menu" class="md:hidden hidden pb-4" aria-label="Mobile navigation">
+      <div class="flex flex-col gap-1">
+        {navLinks.map(({ href, label }) => (
+          <a
+            href={href}
+            class:list={[
+              'px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200',
+              currentPath === href || (href !== `/${lang}` && currentPath.startsWith(href))
+                ? 'bg-[var(--primary)] text-white'
+                : 'text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--bg-secondary)]',
+            ]}
+          >
+            {label}
+          </a>
+        ))}
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- Cart count updater script -->
+<script>
+  import { cartCount, cartOpen } from '../../stores/cart';
+
+  const countEl = document.getElementById('cart-count');
+  const cartBtn = document.getElementById('cart-btn');
+
+  cartCount.subscribe((count) => {
+    if (countEl) {
+      countEl.textContent = String(count);
+      countEl.classList.toggle('hidden', count === 0);
+    }
+  });
+
+  cartBtn?.addEventListener('click', () => {
+    cartOpen.set(!cartOpen.get());
+  });
+
+  // Mobile menu toggle
+  const mobileBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  mobileBtn?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
+  });
+</script>
