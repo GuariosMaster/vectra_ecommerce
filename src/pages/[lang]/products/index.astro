@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import ProductGrid from '../../../components/products/ProductGrid.astro';
+import ProductCatalog from '../../../components/products/ProductCatalog';
 import ShoppingCart from '../../../components/products/ShoppingCart';
 import { useTranslations, type Lang } from '../../../i18n/ui';
 
@@ -13,7 +13,20 @@ const { lang } = Astro.params as { lang: Lang };
 const t = useTranslations(lang);
 
 const allProducts = await getCollection('products');
-const products = allProducts.sort((a, b) => (a.data.featured ? -1 : 1));
+
+// Serialize para pasar al React island
+const products = allProducts
+  .sort((a, b) => (b.data.featured ? 1 : 0) - (a.data.featured ? 1 : 0))
+  .map((p) => ({
+    id: p.id,
+    name: p.data.name,
+    price: p.data.price,
+    category: p.data.category,
+    inStock: p.data.inStock,
+    shortDescription: p.data.shortDescription,
+    image: p.data.image,
+    featured: p.data.featured,
+  }));
 ---
 
 <BaseLayout
@@ -22,14 +35,22 @@ const products = allProducts.sort((a, b) => (a.data.featured ? -1 : 1));
   lang={lang}
 >
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Header -->
-    <div class="mb-10">
-      <h1 class="text-4xl font-black text-[var(--text)] mb-2">{t('products.title')}</h1>
-      <p class="text-[var(--text-muted)]">{t('products.subtitle')}</p>
+    <!-- Header con efecto neon -->
+    <div class="mb-10 relative">
+      <div class="absolute -top-8 left-0 w-64 h-32 bg-[var(--primary)] opacity-5 blur-[60px] pointer-events-none rounded-full"></div>
+      <div class="relative">
+        <span class="inline-block text-xs font-bold tracking-[0.2em] uppercase text-[var(--primary)] mb-3">
+          — {lang === 'es' ? 'Colección completa' : 'Full collection'}
+        </span>
+        <h1 class="text-4xl md:text-5xl font-black text-[var(--text)] mb-3">
+          {t('products.title')}
+        </h1>
+        <p class="text-[var(--text-muted)] text-lg">{t('products.subtitle')}</p>
+      </div>
     </div>
 
-    <!-- Grid (static, no client-side filter yet) -->
-    <ProductGrid lang={lang} products={products} />
+    <!-- Catálogo interactivo con filtros (React island) -->
+    <ProductCatalog products={products} lang={lang} client:load />
   </div>
 
   <ShoppingCart lang={lang} client:load />

@@ -4,27 +4,31 @@
 
 /* ===== CSS Variables — Theme System ===== */
 :root {
-  /* Light mode — tech blue */
-  --bg:           #f8fafc;
-  --bg-secondary: #f1f5f9;
-  --bg-card:      #ffffff;
-  --border:       #e2e8f0;
-  --text:         #0f172a;
-  --text-muted:   #64748b;
-  --primary:      #2563eb;
-  --primary-hover:#1d4ed8;
+  /* Light mode — fuchsia clean */
+  --bg:            #fdf8ff;
+  --bg-secondary:  #f5eeff;
+  --bg-card:       #ffffff;
+  --border:        #e8d4f5;
+  --text:          #1a0a2e;
+  --text-muted:    #6b4d8a;
+  --primary:       #c026d3;
+  --primary-hover: #a21caf;
+  --glow:          rgba(192, 38, 211, 0.35);
+  --glow-weak:     rgba(192, 38, 211, 0.12);
 }
 
 :root.dark {
-  /* Dark mode — Claude Code style */
-  --bg:           #1e1e1e;
-  --bg-secondary: #252526;
-  --bg-card:      #2d2d30;
-  --border:       #3e3e42;
-  --text:         #cccccc;
-  --text-muted:   #8a8a8a;
-  --primary:      #3b82f6;
-  --primary-hover:#2563eb;
+  /* Dark mode — neon fuchsia / cyberpunk (Vayne aesthetic) */
+  --bg:            #07060f;
+  --bg-secondary:  #0d0b1a;
+  --bg-card:       #110f1f;
+  --border:        #2a1845;
+  --text:          #f0e6ff;
+  --text-muted:    #7c6499;
+  --primary:       #e040fb;
+  --primary-hover: #ce2ff5;
+  --glow:          rgba(224, 64, 251, 0.5);
+  --glow-weak:     rgba(224, 64, 251, 0.15);
 }
 
 /* ===== Base Styles ===== */
@@ -39,22 +43,38 @@
   }
 
   * {
-    @apply border-[var(--border)];
+    border-color: var(--border);
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold text-[var(--text)];
+    color: var(--text);
+    font-weight: 700;
   }
 }
 
-/* ===== Utility Classes ===== */
+/* ===== Glow utilities ===== */
 @layer utilities {
-  .bg-theme        { background-color: var(--bg); }
-  .bg-theme-secondary { background-color: var(--bg-secondary); }
-  .bg-theme-card   { background-color: var(--bg-card); }
-  .text-theme      { color: var(--text); }
-  .text-theme-muted { color: var(--text-muted); }
-  .border-theme    { border-color: var(--border); }
-  .text-primary    { color: var(--primary); }
-  .bg-primary      { background-color: var(--primary); }
+  .glow-primary {
+    box-shadow: 0 0 18px var(--glow), 0 0 40px var(--glow-weak);
+  }
+  .glow-primary-sm {
+    box-shadow: 0 0 8px var(--glow-weak), 0 0 20px var(--glow-weak);
+  }
+  .glow-text {
+    text-shadow: 0 0 12px var(--glow);
+  }
+  .border-glow {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px var(--glow-weak), inset 0 0 12px var(--glow-weak);
+  }
+  /* Scanline effect for dark mode cards */
+  .dark .card-cyber {
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(224, 64, 251, 0.015) 2px,
+      rgba(224, 64, 251, 0.015) 4px
+    );
+  }
 }

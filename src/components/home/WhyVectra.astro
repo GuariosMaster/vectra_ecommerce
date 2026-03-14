@@ -10,36 +10,48 @@ const t = useTranslations(lang);
 
 const features = [
   {
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
     key: 'quality',
-    color: 'text-blue-400',
-    bg: 'bg-blue-500/10',
+    color: 'text-fuchsia-400',
+    bg: 'bg-fuchsia-500/10',
+    borderHover: 'hover:border-fuchsia-500/40',
   },
   {
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M6.34 17.66l-1.41 1.41M2 12h2M20 12h2M19.07 19.07l-1.41-1.41M6.34 6.34L4.93 4.93M12 2v2M12 20v2"/></svg>`,
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M6.34 17.66l-1.41 1.41M2 12h2M20 12h2M19.07 19.07l-1.41-1.41M6.34 6.34L4.93 4.93M12 2v2M12 20v2"/></svg>`,
     key: 'precision',
-    color: 'text-purple-400',
-    bg: 'bg-purple-500/10',
+    color: 'text-violet-400',
+    bg: 'bg-violet-500/10',
+    borderHover: 'hover:border-violet-500/40',
   },
   {
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`,
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`,
     key: 'custom',
-    color: 'text-green-400',
-    bg: 'bg-green-500/10',
+    color: 'text-pink-400',
+    bg: 'bg-pink-500/10',
+    borderHover: 'hover:border-pink-500/40',
   },
   {
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
     key: 'fast',
-    color: 'text-yellow-400',
-    bg: 'bg-yellow-500/10',
+    color: 'text-rose-400',
+    bg: 'bg-rose-500/10',
+    borderHover: 'hover:border-rose-500/40',
   },
 ];
 ---
 
-<section class="py-20 bg-[var(--bg-secondary)]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="py-24 bg-[var(--bg-secondary)] relative overflow-hidden">
+  <!-- Glow de fondo -->
+  <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
+       style="background: radial-gradient(ellipse, var(--primary), transparent 70%); opacity: 0.04; filter: blur(20px);">
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-black text-[var(--text)] mb-4">
+      <span class="inline-block text-xs font-bold tracking-[0.2em] uppercase text-[var(--primary)] mb-3">
+        — {lang === 'es' ? 'Nuestro diferencial' : 'Our edge'}
+      </span>
+      <h2 class="text-3xl md:text-5xl font-black text-[var(--text)] mb-4">
         {t('why.title')}
       </h2>
       <p class="text-[var(--text-muted)] text-lg max-w-xl mx-auto">
@@ -47,16 +59,16 @@ const features = [
       </p>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {features.map(({ icon, key, color, bg }) => (
-        <div class="group p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border)]
-                    hover:border-[var(--primary)] hover:shadow-lg
-                    transition-all duration-300 hover:-translate-y-1">
-          <div class={`w-12 h-12 rounded-xl ${bg} ${color} flex items-center justify-center mb-4
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {features.map(({ icon, key, color, bg, borderHover }) => (
+        <div class={`group p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] card-cyber
+                     ${borderHover} hover:-translate-y-1.5
+                     transition-all duration-300 cursor-default`}>
+          <div class={`w-12 h-12 rounded-xl ${bg} ${color} flex items-center justify-center mb-5
                        group-hover:scale-110 transition-transform duration-300`}
                set:html={icon}
           />
-          <h3 class="font-semibold text-[var(--text)] mb-2">
+          <h3 class="font-bold text-[var(--text)] mb-2">
             {t(`why.${key}.title`)}
           </h3>
           <p class="text-[var(--text-muted)] text-sm leading-relaxed">
