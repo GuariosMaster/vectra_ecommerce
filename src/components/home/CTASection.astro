@@ -10,30 +10,45 @@ const t = useTranslations(lang);
 ---
 
 <section class="py-24 bg-[var(--bg)] relative overflow-hidden">
-  <!-- Background glow -->
+  <!-- Background glow — fuchsia center -->
   <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
     <div class="w-[700px] h-[400px] rounded-full opacity-[0.07]"
          style="background: radial-gradient(ellipse, var(--primary), transparent 70%); filter: blur(40px);">
     </div>
   </div>
+  <!-- Blue glow — offset left -->
+  <div class="absolute left-0 top-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full pointer-events-none opacity-[0.05]"
+       style="background: var(--accent); filter: blur(60px);">
+  </div>
+  <!-- Blue glow — offset right -->
+  <div class="absolute right-0 top-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full pointer-events-none opacity-[0.04]"
+       style="background: var(--accent); filter: blur(60px);">
+  </div>
 
   <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <div class="p-12 rounded-3xl bg-[var(--bg-card)] card-cyber relative overflow-hidden"
-         style="border: 1px solid var(--primary); box-shadow: 0 0 60px var(--glow-weak), inset 0 0 40px var(--glow-weak);">
+    <div class="p-6 sm:p-8 md:p-12 rounded-3xl bg-[var(--bg-card)] card-cyber relative overflow-hidden"
+         style="border: 1px solid var(--primary); box-shadow: 0 0 60px var(--glow-weak), 0 0 30px var(--accent-weak), inset 0 0 40px var(--glow-weak);">
 
-      <!-- Corner decoration -->
+      <!-- Corner — top-left: blue -->
       <div class="absolute top-0 left-0 w-16 h-16 pointer-events-none"
-           style="background: linear-gradient(135deg, var(--primary), transparent); opacity: 0.15; border-radius: 1.5rem 0 0 0;">
+           style="background: linear-gradient(135deg, var(--accent), transparent); opacity: 0.2; border-radius: 1.5rem 0 0 0;">
       </div>
+      <!-- Corner — bottom-right: fuchsia -->
       <div class="absolute bottom-0 right-0 w-16 h-16 pointer-events-none"
-           style="background: linear-gradient(315deg, var(--primary), transparent); opacity: 0.15; border-radius: 0 0 1.5rem 0;">
+           style="background: linear-gradient(315deg, var(--primary), transparent); opacity: 0.18; border-radius: 0 0 1.5rem 0;">
       </div>
+      <!-- Corner accent lines -->
+      <div class="absolute top-0 left-0 w-8 h-px pointer-events-none" style="background: var(--accent); opacity: 0.5;"></div>
+      <div class="absolute top-0 left-0 w-px h-8 pointer-events-none" style="background: var(--accent); opacity: 0.5;"></div>
+      <div class="absolute bottom-0 right-0 w-8 h-px pointer-events-none" style="background: var(--primary); opacity: 0.5;"></div>
+      <div class="absolute bottom-0 right-0 w-px h-8 pointer-events-none" style="background: var(--primary); opacity: 0.5;"></div>
 
-      <span class="inline-block text-xs font-bold tracking-[0.2em] uppercase text-[var(--primary)] mb-4">
+      <span class="inline-block text-xs font-bold tracking-[0.2em] uppercase mb-4"
+            style="color: var(--accent);">
         — {lang === 'es' ? 'Personalización total' : 'Full customization'}
       </span>
 
-      <h2 class="text-3xl md:text-5xl font-black text-[var(--text)] mb-4">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-[var(--text)] mb-4">
         {t('cta.title')}
       </h2>
       <p class="text-[var(--text-muted)] text-lg mb-10 max-w-lg mx-auto">
@@ -41,10 +56,9 @@ const t = useTranslations(lang);
       </p>
       <a
         href={`/${lang}/personalization`}
-        class="inline-flex items-center gap-3 px-10 py-5 rounded-xl font-bold text-white text-lg
-               bg-[var(--primary)] hover:bg-[var(--primary-hover)]
+        class="inline-flex items-center gap-3 px-6 sm:px-10 py-3.5 sm:py-5 rounded-xl font-bold text-white text-base sm:text-lg
                transition-all duration-200 hover:scale-[1.03]"
-        style="box-shadow: 0 0 40px var(--glow), 0 4px 20px rgba(0,0,0,0.3);"
+        style="background: linear-gradient(135deg, var(--accent), var(--primary)); box-shadow: 0 0 30px var(--glow-weak), 0 0 20px var(--accent-weak), 0 4px 20px rgba(0,0,0,0.3);"
       >
         {t('cta.button')}
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">

@@ -2,14 +2,25 @@ import { atom } from 'nanostores';
 
 export type Theme = 'dark' | 'light';
 
-export const themeStore = atom<Theme>('dark');
+/**
+ * Read the current theme directly from the <html> class so the store
+ * starts in sync with whatever the anti-FOUC inline script already set.
+ * Falls back to 'dark' during SSG (no `document`).
+ */
+function getInitialTheme(): Theme {
+  if (typeof document !== 'undefined') {
+    return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+  }
+  return 'dark';
+}
+
+export const themeStore = atom<Theme>(getInitialTheme());
 
 export function initTheme() {
   if (typeof window === 'undefined') return;
   const stored = localStorage.getItem('vectra-theme') as Theme | null;
   const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  const theme = stored ?? preferred;
-  applyTheme(theme);
+  applyTheme(stored ?? preferred);
 }
 
 export function applyTheme(theme: Theme) {
@@ -20,6 +31,5 @@ export function applyTheme(theme: Theme) {
 }
 
 export function toggleTheme() {
-  const current = themeStore.get();
-  applyTheme(current === 'dark' ? 'light' : 'dark');
+  applyTheme(themeStore.get() === 'dark' ? 'light' : 'dark');
 }

@@ -15,36 +15,40 @@ const t = useTranslations(lang);
     style="background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 44px 44px; opacity: 0.4;">
   </div>
 
-  <!-- Neon glow orbs -->
+  <!-- Fuchsia orb — left -->
   <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full pointer-events-none"
     style="background: var(--primary); opacity: 0.06; filter: blur(120px); transform: translate(-50%, -50%);">
   </div>
-  <div class="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full pointer-events-none"
-    style="background: #7c3aed; opacity: 0.05; filter: blur(80px);">
+  <!-- Blue orb — right -->
+  <div class="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] rounded-full pointer-events-none"
+    style="background: var(--accent); opacity: 0.07; filter: blur(90px);">
+  </div>
+  <!-- Blue orb — top right corner -->
+  <div class="absolute -top-10 right-0 w-[280px] h-[280px] rounded-full pointer-events-none"
+    style="background: var(--accent); opacity: 0.04; filter: blur(70px);">
   </div>
 
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32 w-full">
-    <div class="grid lg:grid-cols-2 gap-16 items-center">
+    <div class="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
 
       <!-- Content -->
       <div class="text-center lg:text-left">
-        <!-- Badge -->
+        <!-- Badge — blue accent -->
         <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full mb-6
-                    border text-sm font-semibold
-                    bg-[var(--primary)]/10 border-[var(--primary)]/30 text-[var(--primary)]"
-             style="box-shadow: 0 0 16px var(--glow-weak);">
+                    border text-sm font-semibold"
+             style="background: var(--accent-weak); border-color: rgba(96,165,250,0.35); color: var(--accent); box-shadow: 0 0 16px var(--accent-weak);">
           <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--primary)] opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-[var(--primary)]"></span>
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background: var(--accent);"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2" style="background: var(--accent);"></span>
           </span>
           {t('hero.badge')}
         </div>
 
-        <!-- Headline -->
-        <h1 class="text-5xl lg:text-7xl font-black text-[var(--text)] leading-[1.05] mb-6 tracking-tight">
+        <!-- Headline — blue → fuchsia gradient -->
+        <h1 class="text-3xl sm:text-5xl lg:text-7xl font-black text-[var(--text)] leading-[1.05] mb-6 tracking-tight">
           {t('hero.title')}<br />
-          <span class="glow-text"
-            style="background: linear-gradient(135deg, var(--primary), #9333ea); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+          <span
+            style="background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 20px var(--glow-weak));">
             {t('hero.titleHighlight')}
           </span>
         </h1>
@@ -55,12 +59,12 @@ const t = useTranslations(lang);
 
         <!-- CTAs -->
         <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <!-- Primary — fuchsia -->
           <a
             href={`/${lang}/products`}
             class="group px-8 py-4 rounded-xl font-bold text-white text-lg
-                   bg-[var(--primary)] hover:bg-[var(--primary-hover)]
                    transition-all duration-200 hover:scale-[1.03]"
-            style="box-shadow: 0 0 30px var(--glow), 0 4px 16px rgba(0,0,0,0.3);"
+            style="background: var(--primary); box-shadow: 0 0 30px var(--glow), 0 4px 16px rgba(0,0,0,0.3);"
           >
             <span class="flex items-center justify-center gap-2">
               {t('hero.ctaPrimary')}
@@ -69,27 +73,27 @@ const t = useTranslations(lang);
               </svg>
             </span>
           </a>
+          <!-- Secondary — blue accent -->
           <a
             href={`/${lang}/personalization`}
-            class="px-8 py-4 rounded-xl font-bold text-lg
-                   border border-[var(--border)] text-[var(--text)]
-                   hover:border-[var(--primary)] hover:text-[var(--primary)]
-                   hover:bg-[var(--primary)]/5
-                   transition-all duration-200"
+            class="px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200"
+            style="border: 1px solid var(--accent); color: var(--accent); background: var(--accent-weak);"
+            onmouseover="this.style.boxShadow='0 0 18px var(--accent-glow)'"
+            onmouseout="this.style.boxShadow='none'"
           >
             {t('hero.ctaSecondary')} →
           </a>
         </div>
 
-        <!-- Stats -->
-        <div class="mt-14 flex gap-8 justify-center lg:justify-start">
+        <!-- Stats — alternating fuchsia / blue -->
+        <div class="mt-10 sm:mt-14 flex gap-4 sm:gap-6 md:gap-8 justify-center lg:justify-start">
           {[
-            { value: '500+', label: lang === 'es' ? 'Proyectos' : 'Projects' },
-            { value: '98%', label: lang === 'es' ? 'Satisfacción' : 'Satisfaction' },
-            { value: '48h', label: lang === 'es' ? 'Entrega media' : 'Avg delivery' },
-          ].map(({ value, label }) => (
+            { value: '500+', label: lang === 'es' ? 'Proyectos' : 'Projects',       color: 'var(--primary)', glow: 'var(--glow)' },
+            { value: '98%',  label: lang === 'es' ? 'Satisfacción' : 'Satisfaction', color: 'var(--accent)',  glow: 'var(--accent-glow)' },
+            { value: '48h',  label: lang === 'es' ? 'Entrega media' : 'Avg delivery',color: 'var(--primary)', glow: 'var(--glow)' },
+          ].map(({ value, label, color, glow }) => (
             <div class="text-center lg:text-left">
-              <div class="text-3xl font-black text-[var(--text)] glow-text" style="color: var(--primary);">{value}</div>
+              <div class="text-3xl font-black" style={`color: ${color}; text-shadow: 0 0 12px ${glow};`}>{value}</div>
               <div class="text-xs text-[var(--text-muted)] mt-1 tracking-wide uppercase">{label}</div>
             </div>
           ))}
@@ -99,33 +103,32 @@ const t = useTranslations(lang);
       <!-- Visual panel -->
       <div class="relative flex justify-center">
         <div class="relative w-full max-w-sm">
-          <!-- Outer glow ring -->
+          <!-- Outer glow ring — blue + fuchsia -->
           <div class="absolute -inset-4 rounded-3xl opacity-20 pointer-events-none"
-            style="background: conic-gradient(from 0deg, var(--primary), #7c3aed, var(--primary)); filter: blur(20px);">
+            style="background: conic-gradient(from 0deg, var(--accent), var(--primary), var(--accent)); filter: blur(20px);">
           </div>
 
           <!-- Main card -->
-          <div class="relative rounded-3xl border p-8
-                      bg-[var(--bg-card)] card-cyber"
-               style="border-color: var(--primary); box-shadow: 0 0 40px var(--glow-weak), inset 0 0 30px var(--glow-weak);">
+          <div class="relative rounded-3xl border p-8 bg-[var(--bg-card)] card-cyber"
+               style="border-color: var(--primary); box-shadow: 0 0 40px var(--glow-weak), 0 0 20px var(--accent-weak), inset 0 0 30px var(--glow-weak);">
 
             <!-- Top bar decorativo -->
             <div class="flex items-center gap-2 mb-6">
               <div class="w-2.5 h-2.5 rounded-full bg-red-400"></div>
-              <div class="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+              <div class="w-2.5 h-2.5 rounded-full" style="background: var(--accent);"></div>
               <div class="w-2.5 h-2.5 rounded-full" style="background: var(--primary);"></div>
-              <div class="flex-1 h-px" style="background: linear-gradient(to right, var(--border), transparent);"></div>
-              <span class="text-xs font-mono" style="color: var(--primary);">VECTRA_3D</span>
+              <div class="flex-1 h-px" style="background: linear-gradient(to right, var(--accent), var(--primary), transparent);"></div>
+              <span class="text-xs font-mono" style="color: var(--accent);">VECTRA_3D</span>
             </div>
 
             <!-- 3D icon display -->
             <div class="aspect-square rounded-2xl flex items-center justify-center mb-6 relative overflow-hidden"
                  style="background: linear-gradient(135deg, var(--bg-secondary), var(--bg));">
-              <div class="absolute inset-0 opacity-30"
-                   style="background: radial-gradient(circle at center, var(--primary), transparent 70%);">
+              <div class="absolute inset-0 opacity-25"
+                   style="background: radial-gradient(circle at 30% 40%, var(--accent), transparent 60%), radial-gradient(circle at 70% 60%, var(--primary), transparent 60%);">
               </div>
               <div class="relative z-10 w-24 h-24 rounded-2xl flex items-center justify-center"
-                   style="background: linear-gradient(135deg, var(--primary), #9333ea); box-shadow: 0 0 40px var(--glow);">
+                   style="background: linear-gradient(135deg, var(--accent), var(--primary)); box-shadow: 0 0 40px var(--glow);">
                 <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
                   <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
@@ -136,28 +139,27 @@ const t = useTranslations(lang);
             <!-- Info rows -->
             <div class="space-y-2">
               {[
-                { label: 'Material', value: 'PLA Premium' },
-                { label: 'Resolución', value: '0.1mm' },
-                { label: 'Estado', value: lang === 'es' ? '✓ Disponible' : '✓ Available' },
-              ].map(({ label, value }) => (
+                { label: 'Material',   value: 'PLA Premium',                                   accent: 'var(--accent)' },
+                { label: 'Resolución', value: '0.1mm',                                          accent: 'var(--primary)' },
+                { label: 'Estado',     value: lang === 'es' ? '✓ Disponible' : '✓ Available',  accent: '#4ade80' },
+              ].map(({ label, value, accent }) => (
                 <div class="flex items-center justify-between px-3 py-2 rounded-xl"
                      style="background: var(--bg-secondary);">
                   <span class="text-xs font-mono" style="color: var(--text-muted);">{label}</span>
-                  <span class="text-xs font-bold" style="color: value.startsWith('✓') ? '#4ade80' : 'var(--text)';">
-                    {value}
-                  </span>
+                  <span class="text-xs font-bold" style={`color: ${accent};`}>{value}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <!-- Floating badges -->
+          <!-- Floating badge — top right: green quality -->
           <div class="absolute -top-5 -right-5 px-3 py-1.5 rounded-xl text-xs font-bold backdrop-blur-sm"
                style="background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.4); color: #4ade80; box-shadow: 0 0 10px rgba(74,222,128,0.2);">
             ✓ {lang === 'es' ? 'Alta calidad' : 'High quality'}
           </div>
+          <!-- Floating badge — bottom left: blue delivery -->
           <div class="absolute -bottom-5 -left-5 px-3 py-1.5 rounded-xl text-xs font-bold backdrop-blur-sm"
-               style="background: var(--glow-weak); border: 1px solid var(--primary); color: var(--primary); box-shadow: 0 0 10px var(--glow-weak);">
+               style="background: var(--accent-weak); border: 1px solid var(--accent); color: var(--accent); box-shadow: 0 0 10px var(--accent-weak);">
             ⚡ {lang === 'es' ? 'Entrega 48h' : '48h delivery'}
           </div>
         </div>

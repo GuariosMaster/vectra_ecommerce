@@ -24,7 +24,7 @@ const { name, price, image, category, inStock, description, material, dimensions
 
 <BaseLayout title={name} description={description} image={image} lang={lang}>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="grid lg:grid-cols-2 gap-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
 
       <!-- Image -->
       <div class="rounded-2xl overflow-hidden bg-[var(--bg-secondary)] aspect-square">
@@ -45,15 +45,15 @@ const { name, price, image, category, inStock, description, material, dimensions
           ))}
         </div>
 
-        <h1 class="text-4xl font-black text-[var(--text)] mb-4">{name}</h1>
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-[var(--text)] mb-4">{name}</h1>
         <p class="text-[var(--text-muted)] text-lg leading-relaxed mb-6">{description}</p>
 
         <!-- Price -->
-        <div class="text-4xl font-black text-[var(--text)] mb-6">${price.toFixed(2)}</div>
+        <div class="text-3xl sm:text-4xl font-black text-[var(--text)] mb-6">${price.toFixed(2)}</div>
 
         <!-- Specs -->
         {(material || dimensions || weight || printTime) && (
-          <div class="grid grid-cols-2 gap-3 mb-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
             {[
               { label: lang === 'es' ? 'Material' : 'Material', value: material },
               { label: lang === 'es' ? 'Dimensiones' : 'Dimensions', value: dimensions },

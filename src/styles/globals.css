@@ -4,7 +4,7 @@
 
 /* ===== CSS Variables — Theme System ===== */
 :root {
-  /* Light mode — fuchsia clean */
+  /* Light mode — fuchsia + blue */
   --bg:            #fdf8ff;
   --bg-secondary:  #f5eeff;
   --bg-card:       #ffffff;
@@ -15,10 +15,14 @@
   --primary-hover: #a21caf;
   --glow:          rgba(192, 38, 211, 0.35);
   --glow-weak:     rgba(192, 38, 211, 0.12);
+  --accent:        #3b82f6;
+  --accent-hover:  #2563eb;
+  --accent-glow:   rgba(59, 130, 246, 0.3);
+  --accent-weak:   rgba(59, 130, 246, 0.1);
 }
 
 :root.dark {
-  /* Dark mode — neon fuchsia / cyberpunk (Vayne aesthetic) */
+  /* Dark mode — neon fuchsia + blue / cyberpunk */
   --bg:            #07060f;
   --bg-secondary:  #0d0b1a;
   --bg-card:       #110f1f;
@@ -29,6 +33,10 @@
   --primary-hover: #ce2ff5;
   --glow:          rgba(224, 64, 251, 0.5);
   --glow-weak:     rgba(224, 64, 251, 0.15);
+  --accent:        #60a5fa;
+  --accent-hover:  #3b82f6;
+  --accent-glow:   rgba(96, 165, 250, 0.35);
+  --accent-weak:   rgba(96, 165, 250, 0.1);
 }
 
 /* ===== Base Styles ===== */
@@ -40,6 +48,14 @@
   body {
     @apply bg-[var(--bg)] text-[var(--text)] transition-colors duration-300;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Subtle dual-color atmospheric gradient in dark mode */
+  .dark body {
+    background:
+      radial-gradient(ellipse 60% 40% at 15% 60%, rgba(96, 165, 250, 0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 85% 30%, rgba(224, 64, 251, 0.04) 0%, transparent 70%),
+      var(--bg);
   }
 
   * {
@@ -60,21 +76,34 @@
   .glow-primary-sm {
     box-shadow: 0 0 8px var(--glow-weak), 0 0 20px var(--glow-weak);
   }
+  .glow-accent {
+    box-shadow: 0 0 18px var(--accent-glow), 0 0 40px var(--accent-weak);
+  }
+  .glow-accent-sm {
+    box-shadow: 0 0 8px var(--accent-weak), 0 0 20px var(--accent-weak);
+  }
   .glow-text {
     text-shadow: 0 0 12px var(--glow);
+  }
+  .glow-text-accent {
+    text-shadow: 0 0 12px var(--accent-glow);
   }
   .border-glow {
     border-color: var(--primary);
     box-shadow: 0 0 0 1px var(--glow-weak), inset 0 0 12px var(--glow-weak);
   }
-  /* Scanline effect for dark mode cards */
+  .border-glow-accent {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent-weak), inset 0 0 12px var(--accent-weak);
+  }
+  /* Scanline effect — mixes both fuchsia and blue */
   .dark .card-cyber {
     background-image: repeating-linear-gradient(
       0deg,
       transparent,
       transparent 2px,
-      rgba(224, 64, 251, 0.015) 2px,
-      rgba(224, 64, 251, 0.015) 4px
+      rgba(224, 64, 251, 0.012) 2px,
+      rgba(96, 165, 250, 0.008) 4px
     );
   }
 }

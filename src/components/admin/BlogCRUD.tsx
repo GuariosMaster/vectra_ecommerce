@@ -82,18 +82,53 @@ export default function BlogCRUD() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-[var(--text)]">Blog Posts ({posts.length})</h2>
+      <div className="flex items-center justify-between mb-6 gap-3">
+        <h2 className="text-lg sm:text-xl font-bold text-[var(--text)]">Blog Posts ({posts.length})</h2>
         <button
           onClick={openCreate}
-          className="px-4 py-2 rounded-xl bg-[var(--primary)] text-white text-sm font-medium
-                     hover:bg-[var(--primary-hover)] transition-colors"
+          className="px-3 sm:px-4 py-2 rounded-xl bg-[var(--primary)] text-white text-sm font-medium
+                     hover:bg-[var(--primary-hover)] transition-colors shrink-0"
         >
-          + Nuevo post
+          + Nuevo
         </button>
       </div>
 
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl overflow-hidden">
+      {/* ── Mobile: cards ── */}
+      <div className="sm:hidden space-y-3">
+        {posts.map((p) => (
+          <div key={p.id} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-4">
+            <div className="flex items-start justify-between gap-2 mb-1">
+              <p className="font-semibold text-[var(--text)] text-sm leading-snug line-clamp-2 flex-1">{p.title}</p>
+              <span className={`px-2 py-1 rounded-full text-xs shrink-0 ${p.draft ? 'bg-yellow-500/10 text-yellow-400' : 'bg-green-500/10 text-green-400'}`}>
+                {p.draft ? 'Borrador' : 'Publicado'}
+              </span>
+            </div>
+            <p className="text-xs text-[var(--text-muted)] mb-3">{p.author} · {p.date}</p>
+            <div className="flex gap-2 pt-3 border-t border-[var(--border)]">
+              <button
+                onClick={() => openEdit(p)}
+                className="flex-1 py-2 rounded-xl text-sm font-medium text-[var(--primary)]
+                           border border-[var(--primary)]/40 hover:bg-[var(--primary)]/10 transition-colors"
+              >
+                Editar
+              </button>
+              <button
+                onClick={() => handleDelete(p.id)}
+                className="flex-1 py-2 rounded-xl text-sm font-medium text-red-400
+                           border border-red-400/40 hover:bg-red-500/10 transition-colors"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        ))}
+        {posts.length === 0 && (
+          <p className="text-center text-[var(--text-muted)] py-10 text-sm">No hay posts</p>
+        )}
+      </div>
+
+      {/* ── Desktop: table ── */}
+      <div className="hidden sm:block bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-[var(--border)] bg-[var(--bg-secondary)]">
@@ -121,6 +156,11 @@ export default function BlogCRUD() {
                 </td>
               </tr>
             ))}
+            {posts.length === 0 && (
+              <tr>
+                <td colSpan={5} className="text-center text-[var(--text-muted)] py-10">No hay posts</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -129,7 +169,8 @@ export default function BlogCRUD() {
         <>
           <div className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm" onClick={() => setModalOpen(false)} />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-md bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-6 space-y-4">
+            <div className="w-full max-w-md bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-5 sm:p-6 space-y-4
+                            max-h-[90vh] overflow-y-auto">
               <h3 className="text-lg font-bold text-[var(--text)]">
                 {editing ? 'Editar post' : 'Nuevo post'}
               </h3>
@@ -174,10 +215,18 @@ export default function BlogCRUD() {
               </label>
 
               <div className="flex gap-3 pt-2">
-                <button onClick={() => setModalOpen(false)} className="flex-1 py-2.5 rounded-xl border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] transition-colors text-sm">
+                <button
+                  onClick={() => setModalOpen(false)}
+                  className="flex-1 py-2.5 rounded-xl border border-[var(--border)] text-[var(--text-muted)]
+                             hover:text-[var(--text)] transition-colors text-sm"
+                >
                   Cancelar
                 </button>
-                <button onClick={handleSubmit} className="flex-1 py-2.5 rounded-xl bg-[var(--primary)] text-white text-sm font-medium hover:bg-[var(--primary-hover)] transition-colors">
+                <button
+                  onClick={handleSubmit}
+                  className="flex-1 py-2.5 rounded-xl bg-[var(--primary)] text-white text-sm font-medium
+                             hover:bg-[var(--primary-hover)] transition-colors"
+                >
                   {editing ? 'Guardar' : 'Crear'}
                 </button>
               </div>

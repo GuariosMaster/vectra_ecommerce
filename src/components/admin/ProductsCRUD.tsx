@@ -82,19 +82,58 @@ export default function ProductsCRUD() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-[var(--text)]">Productos ({products.length})</h2>
+      <div className="flex items-center justify-between mb-6 gap-3">
+        <h2 className="text-lg sm:text-xl font-bold text-[var(--text)]">Productos ({products.length})</h2>
         <button
           onClick={openCreate}
-          className="px-4 py-2 rounded-xl bg-[var(--primary)] text-white text-sm font-medium
-                     hover:bg-[var(--primary-hover)] transition-colors"
+          className="px-3 sm:px-4 py-2 rounded-xl bg-[var(--primary)] text-white text-sm font-medium
+                     hover:bg-[var(--primary-hover)] transition-colors shrink-0"
         >
-          + Nuevo producto
+          + Nuevo
         </button>
       </div>
 
-      {/* Table */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl overflow-hidden">
+      {/* ── Mobile: cards ── */}
+      <div className="sm:hidden space-y-3">
+        {products.map((p) => (
+          <div key={p.id} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-4">
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <div className="min-w-0">
+                <p className="font-semibold text-[var(--text)] text-sm truncate">{p.name}</p>
+                <p className="text-[var(--primary)] font-bold text-base mt-0.5">${p.price.toFixed(2)}</p>
+              </div>
+              <span className={`px-2 py-1 rounded-full text-xs shrink-0 ${p.inStock ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+                {p.inStock ? 'En stock' : 'Sin stock'}
+              </span>
+            </div>
+            <span className="inline-block px-2 py-1 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] text-xs mb-3">
+              {p.category}
+            </span>
+            <div className="flex gap-2 pt-3 border-t border-[var(--border)]">
+              <button
+                onClick={() => openEdit(p)}
+                className="flex-1 py-2 rounded-xl text-sm font-medium text-[var(--primary)]
+                           border border-[var(--primary)]/40 hover:bg-[var(--primary)]/10 transition-colors"
+              >
+                Editar
+              </button>
+              <button
+                onClick={() => handleDelete(p.id)}
+                className="flex-1 py-2 rounded-xl text-sm font-medium text-red-400
+                           border border-red-400/40 hover:bg-red-500/10 transition-colors"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        ))}
+        {products.length === 0 && (
+          <p className="text-center text-[var(--text-muted)] py-10 text-sm">No hay productos</p>
+        )}
+      </div>
+
+      {/* ── Desktop: table ── */}
+      <div className="hidden sm:block bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-[var(--border)] bg-[var(--bg-secondary)]">
@@ -126,6 +165,11 @@ export default function ProductsCRUD() {
                 </td>
               </tr>
             ))}
+            {products.length === 0 && (
+              <tr>
+                <td colSpan={5} className="text-center text-[var(--text-muted)] py-10">No hay productos</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -135,7 +179,8 @@ export default function ProductsCRUD() {
         <>
           <div className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm" onClick={() => setModalOpen(false)} />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-md bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-6 space-y-4">
+            <div className="w-full max-w-md bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-5 sm:p-6 space-y-4
+                            max-h-[90vh] overflow-y-auto">
               <h3 className="text-lg font-bold text-[var(--text)]">
                 {editing ? 'Editar producto' : 'Nuevo producto'}
               </h3>

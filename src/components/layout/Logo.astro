@@ -1,0 +1,110 @@
+---
+interface Props {
+  lang: string;
+  size?: 'sm' | 'md';
+}
+const { lang, size = 'md' } = Astro.props;
+const px = size === 'sm' ? 30 : 36;
+---
+
+<a
+  href={`/${lang}`}
+  class="vectra-logo group inline-flex items-center gap-2.5 flex-shrink-0 select-none outline-none"
+  aria-label="Vectra home"
+>
+  <!-- Geometric V mark -->
+  <div class="vectra-logo__icon relative flex-shrink-0">
+    <svg
+      width={px} height={px}
+      viewBox="0 0 36 36"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <!-- Blue → fuchsia gradient along V (left arm: top-left to center-bottom) -->
+        <linearGradient id="vg-left" x1="8" y1="12" x2="18" y2="26" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#60a5fa"/>
+          <stop offset="100%" stop-color="var(--primary)"/>
+        </linearGradient>
+        <!-- Blue → fuchsia gradient along V (right arm: top-right to center-bottom) -->
+        <linearGradient id="vg-right" x1="28" y1="12" x2="18" y2="26" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#60a5fa"/>
+          <stop offset="100%" stop-color="var(--primary)"/>
+        </linearGradient>
+        <!-- Subtle border gradient -->
+        <linearGradient id="vg-border" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#60a5fa" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.6"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Rounded rect container — neutral gray (Claude-style dark) -->
+      <rect
+        x="1" y="1" width="34" height="34" rx="9"
+        fill="#2a2a2e"
+        stroke="url(#vg-border)"
+        stroke-width="1"
+      />
+      <!-- Top precision ticks — blue tint -->
+      <line x1="7"  y1="11.5" x2="12" y2="11.5" stroke="#60a5fa" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+      <line x1="24" y1="11.5" x2="29" y2="11.5" stroke="#60a5fa" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+      <!-- V left arm (blue → fuchsia) -->
+      <line x1="8"  y1="12" x2="18" y2="26" stroke="url(#vg-left)"  stroke-width="2.4" stroke-linecap="round"/>
+      <!-- V right arm (blue → fuchsia) -->
+      <line x1="28" y1="12" x2="18" y2="26" stroke="url(#vg-right)" stroke-width="2.4" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <!-- VECTRA wordmark -->
+  <div class="vectra-logo__word font-black tracking-[0.17em] uppercase"
+       style={`font-size: ${size === 'sm' ? '0.95rem' : '1.1rem'}; color: var(--text);`}>
+    VEC<span style="color: var(--primary);">TRA</span>
+  </div>
+</a>
+
+<style>
+  /* ── Idle: slow glow pulse on the icon ── */
+  .vectra-logo__icon {
+    animation: vl-pulse 4s ease-in-out infinite;
+    transition: transform 0.25s ease, filter 0.25s ease;
+  }
+
+  @keyframes vl-pulse {
+    0%, 100% { filter: drop-shadow(0 0 2px var(--glow-weak)); }
+    50%       { filter: drop-shadow(0 0 8px var(--glow));      }
+  }
+
+  /* ── Hover: snap to full glow + slight lift ── */
+  .vectra-logo:hover .vectra-logo__icon,
+  .vectra-logo:focus-visible .vectra-logo__icon {
+    animation: none;
+    transform: scale(1.06) translateY(-1px);
+    filter: drop-shadow(0 0 11px var(--glow));
+  }
+
+  /* ── Hover: shimmer sweep across wordmark ── */
+  .vectra-logo__word {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .vectra-logo:hover .vectra-logo__word::after,
+  .vectra-logo:focus-visible .vectra-logo__word::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 40%,
+      rgba(255, 255, 255, 0.06) 55%,
+      transparent 100%
+    );
+    animation: vl-shimmer 0.55s ease-out forwards;
+  }
+
+  @keyframes vl-shimmer {
+    from { transform: translateX(-120%); }
+    to   { transform: translateX(200%);  }
+  }
+</style>

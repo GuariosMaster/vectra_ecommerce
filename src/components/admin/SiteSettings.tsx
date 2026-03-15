@@ -69,8 +69,8 @@ export default function SiteSettings() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-[var(--text)]">Configuración del Sitio</h2>
+      <div className="flex flex-wrap items-center justify-between mb-6 gap-3">
+        <h2 className="text-lg sm:text-xl font-bold text-[var(--text)]">Configuración del Sitio</h2>
         {saved && (
           <div className="px-3 py-1.5 rounded-lg bg-green-500/20 text-green-400 text-sm flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -110,7 +110,7 @@ export default function SiteSettings() {
 
         <button
           onClick={handleSave}
-          className="px-6 py-3 rounded-xl bg-[var(--primary)] text-white font-semibold
+          className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[var(--primary)] text-white font-semibold
                      hover:bg-[var(--primary-hover)] transition-colors"
         >
           Guardar cambios
