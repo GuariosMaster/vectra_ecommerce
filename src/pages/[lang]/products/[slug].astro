@@ -1,28 +1,41 @@
 ---
-import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ShoppingCart from '../../../components/products/ShoppingCart';
 import { useTranslations, type Lang } from '../../../i18n/ui';
+import type { ApiProduct } from '../../../types/api';
 
 export async function getStaticPaths() {
-  const products = await getCollection('products');
+  const apiUrl = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:3000';
+  let apiProducts: ApiProduct[] = [];
+  try {
+    const res = await fetch(`${apiUrl}/api/v1/products?limit=200`);
+    if (res.ok) apiProducts = (await res.json()).data ?? [];
+  } catch (e) {
+    console.error('[slug] getStaticPaths failed:', e);
+  }
+
   return ['es', 'en'].flatMap((lang) =>
-    products.map((product) => ({
-      params: { lang, slug: product.id },
+    apiProducts.map((product) => ({
+      params: { lang, slug: product.slug },
       props: { product, lang },
     }))
   );
 }
 
-type ProductEntry = Awaited<ReturnType<typeof getCollection<'products'>>>[number];
-const { product, lang } = Astro.props as { product: ProductEntry; lang: Lang };
+type Props = { product: ApiProduct; lang: Lang };
+const { product, lang } = Astro.props;
 const t = useTranslations(lang);
 
-const { Content } = await render(product);
-const { name, price, image, category, inStock, description, material, dimensions, weight, printTime, tags = [] } = product.data;
+const name = lang === 'es' ? product.nameEs : product.nameEn;
+const description = lang === 'es' ? product.descriptionEs : product.descriptionEn;
+const shortDescription = lang === 'es' ? product.shortDescEs : product.shortDescEn;
+const image = product.images[0]?.url ?? '/images/placeholder.png';
+const tags = product.tags.map((t) => (lang === 'es' ? t.tag.nameEs : t.tag.nameEn));
+const price = Number(product.price);
+const { inStock, material, dimensions, weight, printTime } = product;
 ---
 
-<BaseLayout title={name} description={description} image={image} lang={lang}>
+<BaseLayout title={name} description={shortDescription} image={image} lang={lang}>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
 
@@ -36,7 +49,7 @@ const { name, price, image, category, inStock, description, material, dimensions
         <!-- Category & tags -->
         <div class="flex flex-wrap gap-2 mb-4">
           <span class="px-3 py-1 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] text-sm font-medium capitalize">
-            {category}
+            {product.category.slug}
           </span>
           {tags.map((tag) => (
             <span class="px-3 py-1 rounded-full bg-[var(--bg-secondary)] text-[var(--text-muted)] text-sm border border-[var(--border)]">
@@ -46,7 +59,7 @@ const { name, price, image, category, inStock, description, material, dimensions
         </div>
 
         <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-[var(--text)] mb-4">{name}</h1>
-        <p class="text-[var(--text-muted)] text-lg leading-relaxed mb-6">{description}</p>
+        <p class="text-[var(--text-muted)] text-lg leading-relaxed mb-6">{shortDescription}</p>
 
         <!-- Price -->
         <div class="text-3xl sm:text-4xl font-black text-[var(--text)] mb-6">${price.toFixed(2)}</div>
@@ -74,11 +87,11 @@ const { name, price, image, category, inStock, description, material, dimensions
             class="add-to-cart w-full py-4 rounded-2xl bg-[var(--primary)] text-white font-bold text-lg
                    hover:bg-[var(--primary-hover)] transition-colors active:scale-95 hover:shadow-lg
                    shadow-[0_0_30px_rgba(59,130,246,0.3)]"
-            data-product-id={product.id}
+            data-product-id={product.slug}
             data-product-name={name}
             data-product-price={price}
             data-product-image={image}
-            data-product-slug={product.id}
+            data-product-slug={product.slug}
           >
             {t('products.addToCart')}
           </button>
@@ -90,7 +103,7 @@ const { name, price, image, category, inStock, description, material, dimensions
       </div>
     </div>
 
-    <!-- Long description / Content -->
+    <!-- Long description -->
     <div class="mt-16 max-w-3xl">
       <div class="prose prose-lg max-w-none
         prose-headings:text-[var(--text)]
@@ -98,12 +111,12 @@ const { name, price, image, category, inStock, description, material, dimensions
         prose-a:text-[var(--primary)]
         prose-strong:text-[var(--text)]
         dark:prose-invert">
-        <Content />
+        <p style="white-space: pre-line">{description}</p>
       </div>
     </div>
   </div>
 
-  <ShoppingCart lang={lang} client:load />
+  <ShoppingCart lang={lang} client:only="react" />
 </BaseLayout>
 
 <script>

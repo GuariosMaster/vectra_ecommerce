@@ -1,8 +1,8 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import BlogList from '../../../components/blog/BlogList.astro';
 import { useTranslations, type Lang } from '../../../i18n/ui';
+import type { ApiPost } from '../../../types/api';
 
 export function getStaticPaths() {
   return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
@@ -11,10 +11,30 @@ export function getStaticPaths() {
 const { lang } = Astro.params as { lang: Lang };
 const t = useTranslations(lang);
 
-const allPosts = await getCollection('blog', (post) => !post.data.draft);
-const posts = allPosts
-  .filter((p) => p.data.lang === lang)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const apiUrl = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:3000';
+let apiPosts: ApiPost[] = [];
+try {
+  const res = await fetch(`${apiUrl}/api/v1/blog?limit=50`);
+  if (res.ok) apiPosts = (await res.json()).data ?? [];
+} catch (e) {
+  console.error('[blog/index] API failed:', e);
+}
+
+// Transformar al formato que espera BlogList (sin modificar ese componente)
+const posts = apiPosts
+  .filter((p) => !p.draft)
+  .sort((a, b) => new Date(b.publishedAt ?? b.createdAt).getTime() - new Date(a.publishedAt ?? a.createdAt).getTime())
+  .map((p) => ({
+    id: p.slug,
+    data: {
+      title: lang === 'es' ? p.titleEs : p.titleEn,
+      excerpt: lang === 'es' ? p.excerptEs : p.excerptEn,
+      date: new Date(p.publishedAt ?? p.createdAt),
+      author: p.author,
+      coverImage: p.coverImage,
+      tags: p.tags.map((t) => (lang === 'es' ? t.tag.nameEs : t.tag.nameEn)),
+    },
+  }));
 ---
 
 <BaseLayout

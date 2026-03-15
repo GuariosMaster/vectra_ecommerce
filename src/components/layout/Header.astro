@@ -88,11 +88,11 @@ const currentPath = Astro.url.pathname;
         </div>
 
         <!-- Theme toggle -->
-        <ThemeToggle client:load />
+        <ThemeToggle client:only="react" />
 
         <!-- User menu — oculto bajo 450px (aparece en el menú hamburguesa) -->
         <div class="hidden min-[450px]:block">
-          <UserMenu lang={lang} client:load />
+          <UserMenu lang={lang} client:only="react" />
         </div>
 
         <!-- Mobile hamburger -->
@@ -158,7 +158,7 @@ const currentPath = Astro.url.pathname;
 
         <!-- Login en menú hamburguesa — solo visible bajo 450px -->
         <div class="min-[450px]:hidden border-t border-[var(--border)] pt-2 mt-1">
-          <UserMenu lang={lang} menuMode={true} client:load />
+          <UserMenu lang={lang} menuMode={true} client:only="react" />
         </div>
       </div>
     </nav>

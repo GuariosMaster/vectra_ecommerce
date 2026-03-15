@@ -28,5 +28,5 @@ const t = useTranslations(lang);
   <CTASection lang={lang} />
 
   <!-- Cart drawer (React island) -->
-  <ShoppingCart lang={lang} client:load />
+  <ShoppingCart lang={lang} client:only="react" />
 </BaseLayout>

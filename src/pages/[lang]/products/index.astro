@@ -1,9 +1,10 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ProductCatalog from '../../../components/products/ProductCatalog';
 import ShoppingCart from '../../../components/products/ShoppingCart';
 import { useTranslations, type Lang } from '../../../i18n/ui';
+import type { ApiProduct, CatalogProduct } from '../../../types/api';
+import { apiProductToCatalog } from '../../../lib/products';
 
 export function getStaticPaths() {
   return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
@@ -12,21 +13,20 @@ export function getStaticPaths() {
 const { lang } = Astro.params as { lang: Lang };
 const t = useTranslations(lang);
 
-const allProducts = await getCollection('products');
-
-// Serialize para pasar al React island
-const products = allProducts
-  .sort((a, b) => (b.data.featured ? 1 : 0) - (a.data.featured ? 1 : 0))
-  .map((p) => ({
-    id: p.id,
-    name: p.data.name,
-    price: p.data.price,
-    category: p.data.category,
-    inStock: p.data.inStock,
-    shortDescription: p.data.shortDescription,
-    image: p.data.image,
-    featured: p.data.featured,
-  }));
+const apiUrl = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:3000';
+let products: CatalogProduct[] = [];
+try {
+  const res = await fetch(`${apiUrl}/api/v1/products?lang=${lang.toUpperCase()}&limit=100`);
+  if (res.ok) {
+    const json = await res.json();
+    const raw = (json.data as ApiProduct[]) ?? [];
+    products = raw
+      .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
+      .map((p) => apiProductToCatalog(p, lang));
+  }
+} catch (e) {
+  console.error('[products/index] API failed:', e);
+}
 ---
 
 <BaseLayout
@@ -50,8 +50,8 @@ const products = allProducts
     </div>
 
     <!-- Catálogo interactivo con filtros (React island) -->
-    <ProductCatalog products={products} lang={lang} client:load />
+    <ProductCatalog products={products} lang={lang} client:only="react" />
   </div>
 
-  <ShoppingCart lang={lang} client:load />
+  <ShoppingCart lang={lang} client:only="react" />
 </BaseLayout>

@@ -1,7 +1,7 @@
 ---
-import { getCollection } from 'astro:content';
 import ProductCard from '../products/ProductCard.astro';
 import { useTranslations, type Lang } from '../../i18n/ui';
+import type { ApiProduct } from '../../types/api';
 
 interface Props {
   lang: Lang;
@@ -10,9 +10,16 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
-const allProducts = await getCollection('products');
-// In Astro 5 Content Layer API, use .id instead of .slug
-const featured = allProducts.filter((p) => p.data.featured).slice(0, 4);
+const apiUrl = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:3000';
+let featured: ApiProduct[] = [];
+try {
+  const res = await fetch(
+    `${apiUrl}/api/v1/products?featured=true&limit=4&lang=${lang.toUpperCase()}`,
+  );
+  if (res.ok) featured = (await res.json()).data ?? [];
+} catch {
+  // render empty on fetch failure
+}
 ---
 
 <section class="py-20 bg-[var(--bg)]">
@@ -48,13 +55,13 @@ const featured = allProducts.filter((p) => p.data.featured).slice(0, 4);
         {featured.map((product) => (
           <ProductCard
             lang={lang}
-            slug={product.id}
-            name={product.data.name}
-            price={product.data.price}
-            image={product.data.image}
-            category={product.data.category}
-            inStock={product.data.inStock}
-            shortDescription={product.data.shortDescription}
+            slug={product.slug}
+            name={lang === 'es' ? product.nameEs : product.nameEn}
+            price={Number(product.price)}
+            image={product.images[0]?.url ?? '/images/placeholder.png'}
+            category={product.category.slug}
+            inStock={product.inStock}
+            shortDescription={lang === 'es' ? product.shortDescEs : product.shortDescEn}
           />
         ))}
       </div>

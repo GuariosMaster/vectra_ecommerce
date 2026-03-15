@@ -1,53 +1,61 @@
 import { useState } from 'react';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import { login, loginWithGoogle } from '../../stores/auth';
+import { login, register, loginWithGoogle } from '../../stores/auth';
 
 const GOOGLE_CLIENT_ID = import.meta.env.PUBLIC_GOOGLE_CLIENT_ID ?? '';
 
-/** Decode a Google JWT credential payload (client-side, no verify needed) */
-function decodeGoogleJwt(token: string): { email?: string; name?: string } | null {
-  try {
-    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-    return JSON.parse(atob(base64));
-  } catch {
-    return null;
-  }
-}
-
 /* ── Inner form (needs GoogleOAuthProvider ancestor) ── */
 function LoginFormInner() {
-  const [email,    setEmail]    = useState('');
-  const [password, setPassword] = useState('');
-  const [error,    setError]    = useState('');
-  const [loading,  setLoading]  = useState(false);
-  const [showPass, setShowPass] = useState(false);
+  const [mode,      setMode]      = useState<'login' | 'register'>('login');
+  const [email,     setEmail]     = useState('');
+  const [password,  setPassword]  = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName,  setLastName]  = useState('');
+  const [error,     setError]     = useState('');
+  const [loading,   setLoading]   = useState(false);
+  const [showPass,  setShowPass]  = useState(false);
+
+  function switchMode(next: 'login' | 'register') {
+    setMode(next);
+    setError('');
+    setEmail('');
+    setPassword('');
+    setFirstName('');
+    setLastName('');
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError('');
-    await new Promise((r) => setTimeout(r, 380));
-    const ok = login(email.trim().toLowerCase(), password);
-    if (ok) {
-      window.location.href = '/admin/dashboard';
-    } else {
-      setError('Correo o contraseña incorrectos.');
+    try {
+      if (mode === 'login') {
+        const { role } = await login(email.trim().toLowerCase(), password);
+        window.location.href = role === 'admin' ? '/admin/dashboard' : '/';
+      } else {
+        await register(email.trim().toLowerCase(), password, firstName.trim() || undefined, lastName.trim() || undefined);
+        window.location.href = '/';
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Ocurrió un error.');
       setLoading(false);
     }
   }
 
-  function handleGoogleSuccess(response: { credential?: string }) {
+  async function handleGoogleSuccess(response: { credential?: string }) {
     if (!response.credential) {
       setError('No se recibió credencial de Google.');
       return;
     }
-    const payload = decodeGoogleJwt(response.credential);
-    if (!payload?.email) {
-      setError('No se pudo obtener el correo de Google.');
-      return;
+    setLoading(true);
+    setError('');
+    try {
+      const { role } = await loginWithGoogle(response.credential);
+      window.location.href = role === 'admin' ? '/admin/dashboard' : '/';
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al iniciar sesión con Google.');
+      setLoading(false);
     }
-    loginWithGoogle(payload.email);
-    window.location.href = '/admin/dashboard';
   }
 
   return (
@@ -96,7 +104,7 @@ function LoginFormInner() {
         </div>
 
         <p className="text-center text-sm text-[var(--text-muted)] mb-6">
-          Inicia sesión para continuar
+          {mode === 'login' ? 'Inicia sesión para continuar' : 'Crea tu cuenta'}
         </p>
 
         {/* ── Card ── */}
@@ -104,6 +112,53 @@ function LoginFormInner() {
           className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-5 sm:p-8 space-y-4"
           style={{ boxShadow: '0 0 40px rgba(0,0,0,0.3), 0 0 20px var(--glow-weak)' }}
         >
+
+          {/* ── Nombre y Apellido (solo en registro) ── */}
+          {mode === 'register' && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-widest mb-2"
+                       style={{ color: 'var(--text-muted)' }}>
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="Juan"
+                  autoComplete="given-name"
+                  className="w-full px-4 py-2.5 rounded-xl text-sm
+                             bg-[var(--bg-secondary)] border border-[var(--border)]
+                             text-[var(--text)] placeholder:text-[var(--text-muted)]
+                             focus:outline-none focus:border-[var(--primary)] transition-colors"
+                  style={{ boxShadow: 'none' }}
+                  onFocus={(e) => (e.currentTarget.style.boxShadow = '0 0 0 1px var(--primary)')}
+                  onBlur={(e)  => (e.currentTarget.style.boxShadow = 'none')}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-widest mb-2"
+                       style={{ color: 'var(--text-muted)' }}>
+                  Apellido
+                </label>
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Pérez"
+                  autoComplete="family-name"
+                  className="w-full px-4 py-2.5 rounded-xl text-sm
+                             bg-[var(--bg-secondary)] border border-[var(--border)]
+                             text-[var(--text)] placeholder:text-[var(--text-muted)]
+                             focus:outline-none focus:border-[var(--primary)] transition-colors"
+                  style={{ boxShadow: 'none' }}
+                  onFocus={(e) => (e.currentTarget.style.boxShadow = '0 0 0 1px var(--primary)')}
+                  onBlur={(e)  => (e.currentTarget.style.boxShadow = 'none')}
+                />
+              </div>
+            </div>
+          )}
+
           {/* Email */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-widest mb-2"
@@ -201,10 +256,25 @@ function LoginFormInner() {
                 <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
                 </svg>
-                Verificando...
+                {mode === 'login' ? 'Verificando...' : 'Registrando...'}
               </span>
-            ) : 'Iniciar sesión'}
+            ) : mode === 'login' ? 'Iniciar sesión' : 'Crear cuenta'}
           </button>
+
+          {/* ── Toggle login / registro ── */}
+          <p className="text-center text-xs" style={{ color: 'var(--text-muted)' }}>
+            {mode === 'login' ? '¿No tenés cuenta?' : '¿Ya tenés cuenta?'}{' '}
+            <button
+              type="button"
+              onClick={() => switchMode(mode === 'login' ? 'register' : 'login')}
+              className="font-semibold transition-colors"
+              style={{ color: 'var(--primary)' }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+            >
+              {mode === 'login' ? 'Registrarse' : 'Iniciar sesión'}
+            </button>
+          </p>
 
           {/* ── Divider ── */}
           <div className="relative py-1">

@@ -17,6 +17,6 @@ import DashboardComp from '../../components/admin/Dashboard.astro';
   import { initAuth, authStore } from '../../stores/auth';
   initAuth();
   authStore.subscribe((state) => {
-    if (!state.isAuthenticated) window.location.href = '/admin';
+    if (!state.isAuthenticated || state.role !== 'admin') window.location.href = '/admin';
   });
 </script>

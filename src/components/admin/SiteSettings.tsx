@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { z } from 'zod';
+import { fetchSettings, saveSettings } from '../../lib/settings';
 
 interface Settings {
   heroTitle: string;
@@ -21,8 +22,6 @@ const settingsSchema = z.object({
   facebookUrl: z.string().url('URL inválida').or(z.literal('')),
 });
 
-const STORAGE_KEY = 'vectra-site-settings';
-
 const defaultSettings: Settings = {
   heroTitle: 'Lleva tus ideas al siguiente nivel',
   heroSubtitle: 'Diseñamos y fabricamos productos 3D personalizados con la más alta precisión.',
@@ -37,13 +36,31 @@ export default function SiteSettings() {
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [saved, setSaved] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) setSettings(JSON.parse(stored));
+    const raw = sessionStorage.getItem('vectra-auth');
+    const t = raw ? JSON.parse(raw).accessToken : null;
+    setToken(t);
+
+    fetchSettings()
+      .then((data) => {
+        setSettings({
+          heroTitle: data.heroTitle ?? defaultSettings.heroTitle,
+          heroSubtitle: data.heroSubtitle ?? defaultSettings.heroSubtitle,
+          ctaText: data.ctaText ?? defaultSettings.ctaText,
+          contactEmail: data.contactEmail ?? defaultSettings.contactEmail,
+          whatsappNumber: data.whatsappNumber ?? defaultSettings.whatsappNumber,
+          instagramUrl: data.instagramUrl ?? defaultSettings.instagramUrl,
+          facebookUrl: data.facebookUrl ?? defaultSettings.facebookUrl,
+        });
+      })
+      .catch((e) => setApiError(e.message));
   }, []);
 
-  function handleSave() {
+  async function handleSave() {
     const result = settingsSchema.safeParse(settings);
     if (!result.success) {
       const errs: Record<string, string> = {};
@@ -52,9 +69,18 @@ export default function SiteSettings() {
       return;
     }
     setErrors({});
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    if (!token) { setApiError('No autenticado'); return; }
+
+    setLoading(true);
+    try {
+      await saveSettings(settings as unknown as Record<string, string>, token);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (e: unknown) {
+      setApiError(e instanceof Error ? e.message : 'Error al guardar');
+    } finally {
+      setLoading(false);
+    }
   }
 
   const fields = [
@@ -65,10 +91,18 @@ export default function SiteSettings() {
     { key: 'whatsappNumber', label: 'Número de WhatsApp', placeholder: '+5491112345678' },
     { key: 'instagramUrl', label: 'URL de Instagram', placeholder: 'https://instagram.com/...' },
     { key: 'facebookUrl', label: 'URL de Facebook', placeholder: 'https://facebook.com/...' },
-  ];
+  ] as const;
 
   return (
     <div>
+      {apiError && (
+        <div className="mb-4 flex items-center justify-between gap-3 px-4 py-3 rounded-xl
+                        bg-red-500/10 border border-red-500/25 text-red-400 text-sm">
+          <span>{apiError}</span>
+          <button onClick={() => setApiError(null)} className="shrink-0 hover:opacity-70">✕</button>
+        </div>
+      )}
+
       <div className="flex flex-wrap items-center justify-between mb-6 gap-3">
         <h2 className="text-lg sm:text-xl font-bold text-[var(--text)]">Configuración del Sitio</h2>
         {saved && (
@@ -87,7 +121,7 @@ export default function SiteSettings() {
             <label className="block text-sm font-medium text-[var(--text)] mb-1.5">{label}</label>
             {multiline ? (
               <textarea
-                value={settings[key as keyof Settings]}
+                value={settings[key]}
                 onChange={(e) => setSettings({ ...settings, [key]: e.target.value })}
                 rows={3}
                 className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)]
@@ -96,7 +130,7 @@ export default function SiteSettings() {
             ) : (
               <input
                 type={type ?? 'text'}
-                value={settings[key as keyof Settings]}
+                value={settings[key]}
                 onChange={(e) => setSettings({ ...settings, [key]: e.target.value })}
                 placeholder={placeholder}
                 className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)]
@@ -110,10 +144,11 @@ export default function SiteSettings() {
 
         <button
           onClick={handleSave}
+          disabled={loading}
           className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[var(--primary)] text-white font-semibold
-                     hover:bg-[var(--primary-hover)] transition-colors"
+                     hover:bg-[var(--primary-hover)] transition-colors disabled:opacity-50"
         >
-          Guardar cambios
+          {loading ? 'Guardando...' : 'Guardar cambios'}
         </button>
       </div>
     </div>
