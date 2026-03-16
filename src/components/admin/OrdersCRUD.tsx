@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchOrders, updateOrderStatus } from '../../lib/orders';
+import { fetchOrders, updateOrderStatus, deleteOrder } from '../../lib/orders';
 import type { ApiOrder, OrderStatus } from '../../types/api';
 
 const STATUS_LABELS: Record<OrderStatus, string> = {
@@ -59,6 +59,19 @@ export default function OrdersCRUD() {
       setApiError(e instanceof Error ? e.message : 'Error al cargar pedidos');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleDelete(orderId: string) {
+    if (!token) return;
+    if (!confirm('¿Eliminar este pedido? Esta acción no se puede deshacer.')) return;
+    try {
+      await deleteOrder(orderId, token);
+      setOrders((prev) => prev.filter((o) => o.id !== orderId));
+      setTotal((t) => t - 1);
+      setSelected(null);
+    } catch (e: unknown) {
+      setApiError(e instanceof Error ? e.message : 'Error al eliminar pedido');
     }
   }
 
@@ -305,6 +318,17 @@ export default function OrdersCRUD() {
                     <p className="text-sm text-[var(--text)] bg-[var(--bg-secondary)] rounded-xl px-4 py-3">{selected.notes}</p>
                   </div>
                 )}
+
+                {/* Delete */}
+                <div className="pt-2 border-t border-[var(--border)]">
+                  <button
+                    onClick={() => handleDelete(selected.id)}
+                    className="w-full py-2.5 rounded-xl text-sm font-medium text-red-400
+                               border border-red-400/30 hover:bg-red-500/10 transition-colors"
+                  >
+                    Eliminar pedido
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -26,6 +26,10 @@ export async function getOrder(id: string): Promise<ApiOrder> {
   return res.data;
 }
 
+export async function deleteOrder(id: string, token: string): Promise<void> {
+  return apiFetch<void>(`/api/v1/orders/${id}`, { method: 'DELETE', token });
+}
+
 export async function updateOrderStatus(
   id: string,
   status: OrderStatus,

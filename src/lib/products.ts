@@ -58,6 +58,17 @@ export async function deleteProduct(id: string, token: string): Promise<void> {
   return apiFetch<void>(`/api/v1/products/${id}`, { method: 'DELETE', token });
 }
 
+export async function createCategory(data: { slug: string; nameEs: string }, token: string): Promise<ApiCategory> {
+  const res = await apiFetch<{ data: ApiCategory }>('/api/v1/categories', {
+    method: 'POST', body: data, token,
+  });
+  return res.data;
+}
+
+export async function deleteCategory(id: string, token: string): Promise<void> {
+  return apiFetch<void>(`/api/v1/categories/${id}`, { method: 'DELETE', token });
+}
+
 // ─── Mapper ─────────────────────────────────────────────────────────────────
 
 export function apiProductToCatalog(p: ApiProduct, lang: 'es' | 'en'): CatalogProduct {
