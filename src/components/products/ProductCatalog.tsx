@@ -121,35 +121,36 @@ function ProductCard({ product, lang }: { product: Product; lang: 'es' | 'en' })
           {product.shortDescription}
         </p>
 
-        {/* Price + actions */}
-        <div className="flex items-center justify-between mt-auto gap-2">
-          <span className="text-2xl font-black text-[var(--text)]">
+        {/* Price */}
+        <div className="mt-auto pt-3">
+          <span className="text-xl font-black text-[var(--text)]">
             <span className="text-sm font-medium text-[var(--primary)] mr-0.5">$</span>
             {product.price.toFixed(2)}
           </span>
+        </div>
 
-          <div className="flex gap-2">
-            <a
-              href={`/${lang}/products/${product.id}`}
-              className="px-3 py-2 rounded-xl border border-[var(--border)] text-[var(--text-muted)]
-                         hover:border-[var(--primary)] hover:text-[var(--primary)]
-                         transition-colors text-xs font-medium"
+        {/* Actions */}
+        <div className="flex gap-2 mt-2">
+          <a
+            href={`/${lang}/products/${product.id}`}
+            className="flex-shrink-0 px-3 py-1.5 rounded-lg border border-[var(--border)] text-[var(--text-muted)]
+                       hover:border-[var(--primary)] hover:text-[var(--primary)]
+                       transition-colors text-xs font-medium"
+          >
+            {l.viewDetails}
+          </a>
+          {product.inStock && (
+            <button
+              onClick={handleAdd}
+              className={`flex-1 px-3 py-1.5 rounded-lg text-white text-xs font-bold transition-all duration-200
+                          active:scale-95 ${added
+                            ? 'bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.5)]'
+                            : 'bg-[var(--primary)] hover:bg-[var(--primary-hover)] shadow-[0_0_12px_var(--glow-weak)] hover:shadow-[0_0_20px_var(--glow)]'
+                          }`}
             >
-              {l.viewDetails}
-            </a>
-            {product.inStock && (
-              <button
-                onClick={handleAdd}
-                className={`px-4 py-2 rounded-xl text-white text-xs font-bold transition-all duration-200
-                            active:scale-95 ${added
-                              ? 'bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.5)]'
-                              : 'bg-[var(--primary)] hover:bg-[var(--primary-hover)] shadow-[0_0_12px_var(--glow-weak)] hover:shadow-[0_0_20px_var(--glow)]'
-                            }`}
-              >
-                {added ? '✓' : l.addToCart}
-              </button>
-            )}
-          </div>
+              {added ? '✓' : l.addToCart}
+            </button>
+          )}
         </div>
       </div>
     </article>

@@ -9,8 +9,25 @@ export interface CartItem {
   slug: string;
 }
 
-export const cartItems = atom<CartItem[]>([]);
+function loadCart(): CartItem[] {
+  if (typeof localStorage === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem('vectra-cart');
+    return raw ? (JSON.parse(raw) as CartItem[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+export const cartItems = atom<CartItem[]>(loadCart());
 export const cartOpen = atom<boolean>(false);
+
+// Persist every change to localStorage
+cartItems.subscribe((items) => {
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('vectra-cart', JSON.stringify(items));
+  }
+});
 
 export const cartCount = computed(cartItems, (items) =>
   items.reduce((sum, item) => sum + item.quantity, 0)

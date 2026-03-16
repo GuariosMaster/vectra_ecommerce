@@ -1,4 +1,6 @@
 ---
+import OrdersStatCard from './OrdersStatCard';
+
 const apiUrl = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:3000';
 
 // Todos los contadores vienen de la API
@@ -51,7 +53,7 @@ const stats = [
 <div>
   <h2 class="text-xl sm:text-2xl font-bold text-[var(--text)] mb-6">Panel de Control</h2>
 
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <div class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-8">
     {stats.map(({ label, value, icon, color, bg, href }) => (
       <div class:list={[
         'p-5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--primary)] transition-colors',
@@ -66,6 +68,8 @@ const stats = [
         <div class="text-sm text-[var(--text-muted)] mt-1">{label}</div>
       </div>
     ))}
+    <!-- Orders stat (requires auth → client:only) -->
+    <OrdersStatCard client:only="react" />
   </div>
 
   <!-- Quick links -->
@@ -109,6 +113,34 @@ const stats = [
       <div>
         <div class="font-semibold text-[var(--text)]">Configuración del sitio</div>
         <div class="text-xs text-[var(--text-muted)]">Editar textos, redes sociales y contacto</div>
+      </div>
+    </a>
+
+    <a href="/admin/orders" class="flex items-center gap-4 p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]
+                                      hover:border-[var(--primary)] transition-colors group">
+      <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-400
+                  group-hover:bg-orange-500 group-hover:text-white transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[var(--text)]">Gestionar pedidos</div>
+        <div class="text-xs text-[var(--text-muted)]">Ver y gestionar órdenes de compra</div>
+      </div>
+    </a>
+
+    <a href="/admin/personalization" class="flex items-center gap-4 p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]
+                                      hover:border-[var(--primary)] transition-colors group">
+      <div class="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-400
+                  group-hover:bg-pink-500 group-hover:text-white transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="font-semibold text-[var(--text)]">Gestionar personalizaciones</div>
+        <div class="text-xs text-[var(--text-muted)]">Ver y gestionar solicitudes de productos</div>
       </div>
     </a>
 

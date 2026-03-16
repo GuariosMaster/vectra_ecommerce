@@ -116,6 +116,98 @@ export interface PostFormData {
   tagIds: string[];
 }
 
+export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+export type PaymentStatus = 'PENDING' | 'PAID' | 'FAILED';
+
+export interface ApiShippingAddress {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
+
+export interface ApiOrderItem {
+  id: string;
+  productId: string;
+  productName: string;
+  unitPrice: number;
+  quantity: number;
+  subtotal: number;
+  product: { slug: string; nameEs: string } | null;
+}
+
+export interface ApiOrder {
+  id: string;
+  orderNumber: string;
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  paymentMethod: string | null;
+  paymentId: string | null;
+  subtotal: number;
+  total: number;
+  notes: string | null;
+  guestEmail: string | null;
+  userId: string | null;
+  items: ApiOrderItem[];
+  shippingAddr: ApiShippingAddress | null;
+  user: { email: string; firstName: string; lastName: string } | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateOrderBody {
+  items: { productId: string; quantity: number }[];
+  shippingAddress: {
+    firstName: string; lastName: string; email: string; phone: string;
+    address: string; city: string; state: string; postalCode: string; country: string;
+  };
+  notes?: string;
+  guestEmail?: string;
+}
+
+export interface OrderQuery {
+  page?: number;
+  limit?: number;
+  status?: OrderStatus;
+}
+
+export type PersonalizStatus = 'PENDING' | 'IN_REVIEW' | 'QUOTED' | 'ACCEPTED' | 'REJECTED';
+
+export interface ApiPersonalizationRequest {
+  id: string;
+  userId: string | null;
+  description: string;
+  referenceUrl: string | null;
+  referenceImage: string | null;
+  name: string;
+  email: string;
+  phone: string | null;
+  lang: 'ES' | 'EN';
+  status: PersonalizStatus;
+  adminNotes: string | null;
+  quotedPrice: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UpdatePersonalizationBody {
+  status?: PersonalizStatus;
+  adminNotes?: string;
+  quotedPrice?: number;
+}
+
+export interface PersonalizationQuery {
+  page?: number;
+  limit?: number;
+  status?: PersonalizStatus;
+}
+
 // Shape que espera ProductCatalog.tsx — NO modificar
 export interface CatalogProduct {
   id: string;

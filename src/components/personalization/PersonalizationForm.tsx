@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { z } from 'zod';
+import { submitPersonalizationRequest } from '../../lib/personalization';
 
 interface Props {
   lang: 'es' | 'en';
@@ -66,6 +67,8 @@ export default function PersonalizationForm({ lang, whatsappNumber = '', contact
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const totalSteps = 4;
 
@@ -96,6 +99,28 @@ export default function PersonalizationForm({ lang, whatsappNumber = '', contact
     if (step === 1 && !validateStep1()) return;
     if (step === 3 && !validateStep3()) return;
     setStep((s) => Math.min(s + 1, totalSteps));
+  }
+
+  async function handleSubmit() {
+    if (!validateStep3()) return;
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      const fd = new FormData();
+      fd.append('description', description);
+      fd.append('name', name);
+      fd.append('email', email);
+      fd.append('lang', lang.toUpperCase());
+      if (imageUrl.trim()) fd.append('referenceUrl', imageUrl.trim());
+      if (phone.trim()) fd.append('phone', phone.trim());
+      if (imageFile) fd.append('referenceImage', imageFile);
+      await submitPersonalizationRequest(fd);
+      setStep(4);
+    } catch (e: unknown) {
+      setSubmitError(e instanceof Error ? e.message : 'Error al enviar solicitud');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   function buildWhatsAppMessage() {
@@ -315,20 +340,27 @@ export default function PersonalizationForm({ lang, whatsappNumber = '', contact
           <div className="flex justify-between mt-8">
             <button
               onClick={() => setStep((s) => Math.max(s - 1, 1))}
-              disabled={step === 1}
+              disabled={step === 1 || submitting}
               className="px-6 py-3 rounded-xl border border-[var(--border)] text-[var(--text-muted)]
                          hover:text-[var(--text)] hover:border-[var(--primary)] transition-colors
                          disabled:opacity-30 disabled:cursor-not-allowed"
             >
               ← {l.back}
             </button>
-            <button
-              onClick={step < 3 ? handleNext : () => { if (validateStep3()) setStep(4); }}
-              className="px-8 py-3 rounded-xl bg-[var(--primary)] text-white font-semibold
-                         hover:bg-[var(--primary-hover)] transition-colors active:scale-95"
-            >
-              {step === 3 ? l.send : l.next + ' →'}
-            </button>
+            <div className="flex flex-col items-end gap-1">
+              {submitError && (
+                <p className="text-red-400 text-xs">{submitError}</p>
+              )}
+              <button
+                onClick={step < 3 ? handleNext : handleSubmit}
+                disabled={submitting}
+                className="px-8 py-3 rounded-xl bg-[var(--primary)] text-white font-semibold
+                           hover:bg-[var(--primary-hover)] transition-colors active:scale-95
+                           disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {step === 3 ? (submitting ? '...' : l.send) : l.next + ' →'}
+              </button>
+            </div>
           </div>
         )}
       </div>

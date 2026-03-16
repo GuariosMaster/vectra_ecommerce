@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CheckoutForm from '../../components/checkout/CheckoutForm';
+import { type Lang } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const title = lang === 'es' ? 'Finalizar compra' : 'Checkout';
+---
+
+<BaseLayout title={title} lang={lang}>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <CheckoutForm client:only="react" lang={lang} />
+  </div>
+</BaseLayout>

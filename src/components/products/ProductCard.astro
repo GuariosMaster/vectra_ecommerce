@@ -48,16 +48,20 @@ const t = useTranslations(lang);
     </a>
     <p class="text-[var(--text-muted)] text-sm line-clamp-2 mb-4 flex-1">{shortDescription}</p>
 
-    <!-- Price + Add to cart -->
-    <div class="flex items-center justify-between mt-auto">
-      <span class="text-2xl font-black text-[var(--text)]">
+    <!-- Price -->
+    <div class="mt-auto pt-3">
+      <span class="text-xl font-black text-[var(--text)]">
         ${price.toFixed(2)}
       </span>
+    </div>
+
+    <!-- Add to cart -->
+    <div class="mt-2">
       {inStock ? (
         <button
-          class="add-to-cart px-4 py-2 rounded-xl bg-[var(--primary)] text-white text-sm font-medium
+          class="add-to-cart w-full px-3 py-1.5 rounded-lg bg-[var(--primary)] text-white text-xs font-medium
                  hover:bg-[var(--primary-hover)] transition-colors duration-200
-                 hover:shadow-lg active:scale-95"
+                 hover:shadow-md active:scale-95"
           data-product-id={slug}
           data-product-name={name}
           data-product-price={price}
@@ -67,7 +71,7 @@ const t = useTranslations(lang);
           {t('products.addToCart')}
         </button>
       ) : (
-        <span class="text-[var(--text-muted)] text-sm">{t('products.outOfStock')}</span>
+        <span class="block w-full text-center text-[var(--text-muted)] text-xs py-1.5">{t('products.outOfStock')}</span>
       )}
     </div>
   </div>

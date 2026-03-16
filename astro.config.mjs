@@ -5,6 +5,11 @@ import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
 
 export default defineConfig({
+  vite: {
+    resolve: {
+      dedupe: ['react', 'react-dom'],
+    },
+  },
   site: 'https://vectra.com',
   integrations: [
     mdx(),

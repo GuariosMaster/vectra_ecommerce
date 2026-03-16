@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Confirmación de pedido" lang="es">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 py-16">
+    <div id="order-content" class="text-center">
+      <!-- Rendered by client script below -->
+      <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-center animate-pulse">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--text-muted)]">
+          <circle cx="12" cy="12" r="10"/>
+        </svg>
+      </div>
+      <p class="text-[var(--text-muted)]">Cargando...</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const apiUrl = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:3000';
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const status = params.get('status') ?? 'pending';
+
+  const el = document.getElementById('order-content')!;
+
+  const configs: Record<string, { icon: string; color: string; bg: string; titleEs: string; subtitleEs: string }> = {
+    success: {
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+      color: 'text-green-400', bg: 'bg-green-500/15',
+      titleEs: '¡Pago exitoso!',
+      subtitleEs: 'Tu pedido fue confirmado. Te enviaremos los detalles por email.',
+    },
+    failure: {
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
+      color: 'text-red-400', bg: 'bg-red-500/15',
+      titleEs: 'Pago rechazado',
+      subtitleEs: 'El pago no pudo procesarse. Por favor, intenta de nuevo.',
+    },
+    pending: {
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+      color: 'text-yellow-400', bg: 'bg-yellow-500/15',
+      titleEs: 'Pago en proceso',
+      subtitleEs: 'Tu pago está siendo procesado. Te avisaremos cuando se confirme.',
+    },
+  };
+
+  const cfg = configs[status] ?? configs.pending;
+
+  async function renderOrder() {
+    let orderHtml = '';
+
+    if (id) {
+      try {
+        const res = await fetch(`${apiUrl}/api/v1/orders/${id}`);
+        if (res.ok) {
+          const order = await res.json();
+          const addr = order.shippingAddr;
+          orderHtml = `
+            <div class="mt-8 text-left bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-6 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-[var(--text-muted)]">N° de pedido</span>
+                <span class="text-sm font-mono font-semibold text-[var(--text)]">${order.orderNumber}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-[var(--text-muted)]">Total</span>
+                <span class="text-sm font-bold text-[var(--primary)]">$${Number(order.total).toFixed(2)}</span>
+              </div>
+              ${addr ? `
+              <div class="flex items-start justify-between gap-4">
+                <span class="text-sm text-[var(--text-muted)] shrink-0">Envío a</span>
+                <span class="text-sm text-[var(--text)] text-right">${addr.firstName} ${addr.lastName}<br/>${addr.address}, ${addr.city}</span>
+              </div>` : ''}
+            </div>
+          `;
+        }
+      } catch {
+        // order fetch failed, still show status
+      }
+    }
+
+    el.innerHTML = `
+      <div class="w-16 h-16 mx-auto mb-4 rounded-2xl ${cfg.bg} ${cfg.color} flex items-center justify-center">
+        ${cfg.icon}
+      </div>
+      <h1 class="text-2xl font-black text-[var(--text)] mb-2">${cfg.titleEs}</h1>
+      <p class="text-[var(--text-muted)] text-sm max-w-sm mx-auto">${cfg.subtitleEs}</p>
+      ${orderHtml}
+      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="/es/products"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[var(--primary)] text-white font-semibold text-sm hover:bg-[var(--primary-hover)] transition-colors">
+          Seguir comprando
+        </a>
+        ${status === 'failure' ? `
+        <a href="/es/checkout"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-[var(--border)] text-[var(--text-muted)] font-semibold text-sm hover:border-[var(--primary)] hover:text-[var(--text)] transition-colors">
+          Intentar de nuevo
+        </a>` : ''}
+      </div>
+    `;
+  }
+
+  renderOrder();
+</script>

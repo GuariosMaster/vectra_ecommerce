@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ProductDetailView from '../../../components/products/ProductDetailView';
 import ShoppingCart from '../../../components/products/ShoppingCart';
-import { useTranslations, type Lang } from '../../../i18n/ui';
+import { type Lang } from '../../../i18n/ui';
 import type { ApiProduct } from '../../../types/api';
 
 export async function getStaticPaths() {
@@ -17,119 +18,17 @@ export async function getStaticPaths() {
   return ['es', 'en'].flatMap((lang) =>
     apiProducts.map((product) => ({
       params: { lang, slug: product.slug },
-      props: { product, lang },
+      props: { lang },
     }))
   );
 }
 
-type Props = { product: ApiProduct; lang: Lang };
-const { product, lang } = Astro.props;
-const t = useTranslations(lang);
-
-const name = lang === 'es' ? product.nameEs : product.nameEn;
-const description = lang === 'es' ? product.descriptionEs : product.descriptionEn;
-const shortDescription = lang === 'es' ? product.shortDescEs : product.shortDescEn;
-const image = product.images[0]?.url ?? '/images/placeholder.png';
-const tags = product.tags.map((t) => (lang === 'es' ? t.tag.nameEs : t.tag.nameEn));
-const price = Number(product.price);
-const { inStock, material, dimensions, weight, printTime } = product;
+type Props = { lang: Lang };
+const { slug } = Astro.params;
+const { lang } = Astro.props as Props;
 ---
 
-<BaseLayout title={name} description={shortDescription} image={image} lang={lang}>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-
-      <!-- Image -->
-      <div class="rounded-2xl overflow-hidden bg-[var(--bg-secondary)] aspect-square">
-        <img src={image} alt={name} class="w-full h-full object-cover" loading="eager" />
-      </div>
-
-      <!-- Details -->
-      <div>
-        <!-- Category & tags -->
-        <div class="flex flex-wrap gap-2 mb-4">
-          <span class="px-3 py-1 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] text-sm font-medium capitalize">
-            {product.category.slug}
-          </span>
-          {tags.map((tag) => (
-            <span class="px-3 py-1 rounded-full bg-[var(--bg-secondary)] text-[var(--text-muted)] text-sm border border-[var(--border)]">
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-[var(--text)] mb-4">{name}</h1>
-        <p class="text-[var(--text-muted)] text-lg leading-relaxed mb-6">{shortDescription}</p>
-
-        <!-- Price -->
-        <div class="text-3xl sm:text-4xl font-black text-[var(--text)] mb-6">${price.toFixed(2)}</div>
-
-        <!-- Specs -->
-        {(material || dimensions || weight || printTime) && (
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-            {[
-              { label: lang === 'es' ? 'Material' : 'Material', value: material },
-              { label: lang === 'es' ? 'Dimensiones' : 'Dimensions', value: dimensions },
-              { label: lang === 'es' ? 'Peso' : 'Weight', value: weight },
-              { label: lang === 'es' ? 'Tiempo de impresión' : 'Print time', value: printTime },
-            ].filter((s) => s.value).map(({ label, value }) => (
-              <div class="p-3 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
-                <div class="text-xs text-[var(--text-muted)] mb-1">{label}</div>
-                <div class="font-medium text-[var(--text)] text-sm">{value}</div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <!-- Add to cart -->
-        {inStock ? (
-          <button
-            class="add-to-cart w-full py-4 rounded-2xl bg-[var(--primary)] text-white font-bold text-lg
-                   hover:bg-[var(--primary-hover)] transition-colors active:scale-95 hover:shadow-lg
-                   shadow-[0_0_30px_rgba(59,130,246,0.3)]"
-            data-product-id={product.slug}
-            data-product-name={name}
-            data-product-price={price}
-            data-product-image={image}
-            data-product-slug={product.slug}
-          >
-            {t('products.addToCart')}
-          </button>
-        ) : (
-          <div class="w-full py-4 rounded-2xl bg-[var(--bg-secondary)] text-[var(--text-muted)] font-bold text-lg text-center border border-[var(--border)]">
-            {t('products.outOfStock')}
-          </div>
-        )}
-      </div>
-    </div>
-
-    <!-- Long description -->
-    <div class="mt-16 max-w-3xl">
-      <div class="prose prose-lg max-w-none
-        prose-headings:text-[var(--text)]
-        prose-p:text-[var(--text-muted)]
-        prose-a:text-[var(--primary)]
-        prose-strong:text-[var(--text)]
-        dark:prose-invert">
-        <p style="white-space: pre-line">{description}</p>
-      </div>
-    </div>
-  </div>
-
+<BaseLayout title={slug} lang={lang}>
+  <ProductDetailView client:only="react" slug={slug} lang={lang} />
   <ShoppingCart lang={lang} client:only="react" />
 </BaseLayout>
-
-<script>
-  import { addToCart } from '../../../stores/cart';
-  document.querySelectorAll<HTMLButtonElement>('.add-to-cart').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      addToCart({
-        id: btn.dataset.productId!,
-        name: btn.dataset.productName!,
-        price: parseFloat(btn.dataset.productPrice!),
-        image: btn.dataset.productImage!,
-        slug: btn.dataset.productSlug!,
-      });
-    });
-  });
-</script>

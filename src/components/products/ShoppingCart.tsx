@@ -130,10 +130,10 @@ export default function ShoppingCart({ lang }: Props) {
               <span className="text-2xl font-black text-[var(--text)]">${total.toFixed(2)}</span>
             </div>
             <button
+              onClick={() => { cartOpen.set(false); window.location.href = `/${lang}/checkout`; }}
               className="w-full py-4 rounded-xl bg-[var(--primary)] text-white font-semibold
                          hover:bg-[var(--primary-hover)] transition-colors active:scale-95"
             >
-              {/* TODO: Connect to checkout flow */}
               {l.checkout}
             </button>
             <button
