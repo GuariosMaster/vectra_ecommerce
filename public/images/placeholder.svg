@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="#1a1a2e"/>
+  <rect x="1" y="1" width="398" height="398" rx="3" stroke="#2a2a4a" stroke-width="2"/>
+  <!-- Box outline -->
+  <path d="M200 120 L260 155 L260 225 L200 260 L140 225 L140 155 Z" stroke="#3a3a6a" stroke-width="2" fill="none"/>
+  <path d="M200 120 L200 260" stroke="#3a3a6a" stroke-width="1" stroke-dasharray="4 4"/>
+  <path d="M140 155 L260 155" stroke="#3a3a6a" stroke-width="1" stroke-dasharray="4 4"/>
+  <!-- Image icon -->
+  <rect x="168" y="163" width="64" height="54" rx="4" stroke="#4a4a8a" stroke-width="1.5" fill="none"/>
+  <circle cx="182" cy="178" r="5" stroke="#4a4a8a" stroke-width="1.5" fill="none"/>
+  <path d="M168 200 L185 185 L200 198 L215 188 L232 205 L232 217 L168 217 Z" fill="#2a2a5a"/>
+  <!-- Text -->
+  <text x="200" y="300" text-anchor="middle" fill="#4a4a8a" font-family="system-ui,sans-serif" font-size="14" font-weight="500">Sin imagen</text>
+</svg>

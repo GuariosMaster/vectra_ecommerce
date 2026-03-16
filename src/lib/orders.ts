@@ -2,7 +2,8 @@ import { apiFetch } from './api';
 import type { ApiOrder, CreateOrderBody, OrderQuery, OrderStatus, PaginationMeta } from '../types/api';
 
 export async function createOrder(body: CreateOrderBody): Promise<ApiOrder> {
-  return apiFetch<ApiOrder>('/api/v1/orders', { method: 'POST', body });
+  const res = await apiFetch<{ data: ApiOrder }>('/api/v1/orders', { method: 'POST', body });
+  return res.data;
 }
 
 export async function fetchOrders(
@@ -21,7 +22,8 @@ export async function fetchOrders(
 }
 
 export async function getOrder(id: string): Promise<ApiOrder> {
-  return apiFetch<ApiOrder>(`/api/v1/orders/${id}`);
+  const res = await apiFetch<{ data: ApiOrder }>(`/api/v1/orders/${id}`);
+  return res.data;
 }
 
 export async function updateOrderStatus(
@@ -39,8 +41,9 @@ export async function updateOrderStatus(
 export async function createMpPreference(
   orderId: string
 ): Promise<{ preferenceId: string; initPoint: string; sandboxInitPoint: string }> {
-  return apiFetch(`/api/v1/payments/mp/preference`, {
-    method: 'POST',
-    body: { orderId },
-  });
+  const res = await apiFetch<{ data: { preferenceId: string; initPoint: string; sandboxInitPoint: string } }>(
+    `/api/v1/payments/mp/preference`,
+    { method: 'POST', body: { orderId } },
+  );
+  return res.data;
 }

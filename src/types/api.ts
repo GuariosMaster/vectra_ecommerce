@@ -58,11 +58,11 @@ export interface ProductListQuery {
 export interface ProductFormData {
   slug: string;
   nameEs: string;
-  nameEn: string;
+  nameEn?: string;
   shortDescEs: string;
-  shortDescEn: string;
+  shortDescEn?: string;
   descriptionEs: string;
-  descriptionEn: string;
+  descriptionEn?: string;
   price: number;
   comparePrice?: number;
   stock: number;
@@ -105,11 +105,11 @@ export interface ApiPost {
 export interface PostFormData {
   slug: string;
   titleEs: string;
-  titleEn: string;
+  titleEn?: string;
   excerptEs: string;
-  excerptEn: string;
+  excerptEn?: string;
   contentEs: string;
-  contentEn: string;
+  contentEn?: string;
   coverImage: string;
   author: string;
   draft: boolean;
@@ -206,6 +206,38 @@ export interface PersonalizationQuery {
   page?: number;
   limit?: number;
   status?: PersonalizStatus;
+}
+
+export interface ApiUser {
+  id: string;
+  email: string;
+  role: 'ADMIN' | 'USER';
+  firstName: string | null;
+  lastName: string | null;
+  phone: string | null;
+  lang: 'ES' | 'EN';
+  isActive: boolean;
+  googleId: string | null;
+  lastLoginAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  _count?: { orders: number };
+}
+
+export interface UpdateUserBody {
+  role?: 'ADMIN' | 'USER';
+  isActive?: boolean;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+}
+
+export interface UserQuery {
+  page?: number;
+  limit?: number;
+  role?: 'ADMIN' | 'USER';
+  isActive?: 'true' | 'false';
+  search?: string;
 }
 
 // Shape que espera ProductCatalog.tsx — NO modificar

@@ -52,6 +52,33 @@ const emptyForm: ShippingForm = {
   country: 'CO', notes: '',
 };
 
+const inputClass = `w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)]
+  text-[var(--text)] placeholder:text-[var(--text-muted)] text-sm
+  focus:outline-none focus:border-[var(--primary)] transition-colors`;
+const labelClass = 'block text-sm font-medium text-[var(--text)] mb-1.5';
+const errorClass = 'text-red-400 text-xs mt-1';
+
+function Field({
+  label, type = 'text', placeholder, value, onChange, error,
+}: {
+  label: string; type?: string; placeholder?: string;
+  value: string; onChange: (v: string) => void; error?: string;
+}) {
+  return (
+    <div>
+      <label className={labelClass}>{label}</label>
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className={`${inputClass} ${error ? 'border-red-500' : ''}`}
+      />
+      {error && <p className={errorClass}>{error}</p>}
+    </div>
+  );
+}
+
 export default function CheckoutForm({ lang }: Props) {
   const items = useStore(cartItems);
   const total = useStore(cartTotal);
@@ -123,33 +150,6 @@ export default function CheckoutForm({ lang }: Props) {
     );
   }
 
-  const inputClass = `w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)]
-    text-[var(--text)] placeholder:text-[var(--text-muted)] text-sm
-    focus:outline-none focus:border-[var(--primary)] transition-colors`;
-
-  const labelClass = 'block text-sm font-medium text-[var(--text)] mb-1.5';
-  const errorClass = 'text-red-400 text-xs mt-1';
-
-  function Field({
-    k, label, type = 'text', placeholder,
-  }: {
-    k: keyof ShippingForm; label: string; type?: string; placeholder?: string;
-  }) {
-    return (
-      <div>
-        <label className={labelClass}>{label}</label>
-        <input
-          type={type}
-          value={form[k]}
-          onChange={(e) => set(k, e.target.value)}
-          placeholder={placeholder}
-          className={`${inputClass} ${errors[k] ? 'border-red-500' : ''}`}
-        />
-        {errors[k] && <p className={errorClass}>{errors[k]}</p>}
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-5xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-black text-[var(--text)] mb-8">{l.title}</h1>
@@ -168,17 +168,17 @@ export default function CheckoutForm({ lang }: Props) {
           <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-6">
             <h2 className="text-base font-bold text-[var(--text)] mb-5">{l.shipping}</h2>
             <div className="grid sm:grid-cols-2 gap-4">
-              <Field k="firstName" label={l.firstName} />
-              <Field k="lastName" label={l.lastName} />
-              <Field k="email" label={l.email} type="email" placeholder="tu@email.com" />
-              <Field k="phone" label={l.phone} placeholder="+57 300 000 0000" />
+              <Field label={l.firstName} value={form.firstName} onChange={(v) => set('firstName', v)} error={errors.firstName} />
+              <Field label={l.lastName} value={form.lastName} onChange={(v) => set('lastName', v)} error={errors.lastName} />
+              <Field label={l.email} type="email" placeholder="tu@email.com" value={form.email} onChange={(v) => set('email', v)} error={errors.email} />
+              <Field label={l.phone} placeholder="+57 300 000 0000" value={form.phone} onChange={(v) => set('phone', v)} error={errors.phone} />
               <div className="sm:col-span-2">
-                <Field k="address" label={l.address} placeholder="Calle 123 # 45-67" />
+                <Field label={l.address} placeholder="Calle 123 # 45-67" value={form.address} onChange={(v) => set('address', v)} error={errors.address} />
               </div>
-              <Field k="city" label={l.city} placeholder="Bogotá" />
-              <Field k="state" label={l.state} placeholder="Cundinamarca" />
-              <Field k="postalCode" label={l.postalCode} placeholder="110111" />
-              <Field k="country" label={l.country} placeholder="CO" />
+              <Field label={l.city} placeholder="Bogotá" value={form.city} onChange={(v) => set('city', v)} error={errors.city} />
+              <Field label={l.state} placeholder="Cundinamarca" value={form.state} onChange={(v) => set('state', v)} error={errors.state} />
+              <Field label={l.postalCode} placeholder="110111" value={form.postalCode} onChange={(v) => set('postalCode', v)} error={errors.postalCode} />
+              <Field label={l.country} placeholder="CO" value={form.country} onChange={(v) => set('country', v)} error={errors.country} />
               <div className="sm:col-span-2">
                 <label className={labelClass}>{l.notes}</label>
                 <textarea

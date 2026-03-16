@@ -2,7 +2,7 @@ import { apiFetch } from './api';
 
 export async function fetchSettings(): Promise<Record<string, string>> {
   const res = await apiFetch<{ data: Record<string, string> }>('/api/v1/settings');
-  return (res as unknown as { data: Record<string, string> }).data ?? (res as unknown as Record<string, string>);
+  return res.data;
 }
 
 export async function saveSettings(
@@ -14,5 +14,5 @@ export async function saveSettings(
     body: data,
     token,
   });
-  return (res as unknown as { data: Record<string, string> }).data ?? (res as unknown as Record<string, string>);
+  return res.data;
 }

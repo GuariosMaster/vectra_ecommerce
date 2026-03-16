@@ -6,31 +6,25 @@ import { fetchPosts, createPost, updatePost, deletePost, toSlug } from '../../li
 interface PostForm {
   slug: string;
   titleEs: string;
-  titleEn: string;
   excerptEs: string;
-  excerptEn: string;
   contentEs: string;
-  contentEn: string;
   coverImage: string;
   author: string;
   draft: boolean;
 }
 
 const emptyForm: PostForm = {
-  slug: '', titleEs: '', titleEn: '',
-  excerptEs: '', excerptEn: '',
-  contentEs: '', contentEn: '',
+  slug: '', titleEs: '',
+  excerptEs: '',
+  contentEs: '',
   coverImage: '', author: '', draft: true,
 };
 
 const postSchema = z.object({
   slug: z.string().min(1, 'Requerido'),
   titleEs: z.string().min(2, 'Mínimo 2 caracteres'),
-  titleEn: z.string().min(2, 'Mínimo 2 caracteres'),
   excerptEs: z.string().min(10, 'Mínimo 10 caracteres'),
-  excerptEn: z.string().min(10, 'Mínimo 10 caracteres'),
   contentEs: z.string().min(10, 'Mínimo 10 caracteres'),
-  contentEn: z.string().min(10, 'Mínimo 10 caracteres'),
   coverImage: z.string().url('Debe ser una URL válida'),
   author: z.string().min(2, 'Mínimo 2 caracteres'),
 });
@@ -69,9 +63,9 @@ export default function BlogCRUD() {
     setEditing(p);
     setForm({
       slug: p.slug,
-      titleEs: p.titleEs, titleEn: p.titleEn,
-      excerptEs: p.excerptEs, excerptEn: p.excerptEn,
-      contentEs: p.contentEs, contentEn: p.contentEn,
+      titleEs: p.titleEs,
+      excerptEs: p.excerptEs,
+      contentEs: p.contentEs,
       coverImage: p.coverImage, author: p.author, draft: p.draft,
     });
     setErrors({});
@@ -261,85 +255,42 @@ export default function BlogCRUD() {
                 {errors.slug && <p className="text-red-400 text-xs mt-1">{errors.slug}</p>}
               </div>
 
-              {/* Bilingual fields */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-widest">Español</p>
-
-                  <div>
-                    <label className="block text-xs text-[var(--text-muted)] mb-1">Título ES</label>
-                    <input
-                      value={form.titleEs}
-                      onChange={(e) => setForm({ ...form, titleEs: e.target.value })}
-                      onBlur={() => { if (!editing && !form.slug) setForm((f) => ({ ...f, slug: toSlug(f.titleEs) })); }}
-                      className="w-full px-3 py-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)]
-                                 text-[var(--text)] text-sm focus:outline-none focus:border-[var(--primary)] transition-colors"
-                    />
-                    {errors.titleEs && <p className="text-red-400 text-xs mt-1">{errors.titleEs}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-xs text-[var(--text-muted)] mb-1">Extracto ES</label>
-                    <textarea
-                      rows={2}
-                      value={form.excerptEs}
-                      onChange={(e) => setForm({ ...form, excerptEs: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)]
-                                 text-[var(--text)] text-sm focus:outline-none focus:border-[var(--primary)] transition-colors resize-none"
-                    />
-                    {errors.excerptEs && <p className="text-red-400 text-xs mt-1">{errors.excerptEs}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-xs text-[var(--text-muted)] mb-1">Contenido ES</label>
-                    <textarea
-                      rows={6}
-                      value={form.contentEs}
-                      onChange={(e) => setForm({ ...form, contentEs: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)]
-                                 text-[var(--text)] text-sm focus:outline-none focus:border-[var(--primary)] transition-colors resize-none"
-                    />
-                    {errors.contentEs && <p className="text-red-400 text-xs mt-1">{errors.contentEs}</p>}
-                  </div>
+              {/* Campos de texto */}
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs text-[var(--text-muted)] mb-1">Título</label>
+                  <input
+                    value={form.titleEs}
+                    onChange={(e) => setForm({ ...form, titleEs: e.target.value })}
+                    onBlur={() => { if (!editing && !form.slug) setForm((f) => ({ ...f, slug: toSlug(f.titleEs) })); }}
+                    className="w-full px-3 py-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)]
+                               text-[var(--text)] text-sm focus:outline-none focus:border-[var(--primary)] transition-colors"
+                  />
+                  {errors.titleEs && <p className="text-red-400 text-xs mt-1">{errors.titleEs}</p>}
                 </div>
 
-                <div className="space-y-3">
-                  <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-widest">English</p>
+                <div>
+                  <label className="block text-xs text-[var(--text-muted)] mb-1">Extracto</label>
+                  <textarea
+                    rows={2}
+                    value={form.excerptEs}
+                    onChange={(e) => setForm({ ...form, excerptEs: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)]
+                               text-[var(--text)] text-sm focus:outline-none focus:border-[var(--primary)] transition-colors resize-none"
+                  />
+                  {errors.excerptEs && <p className="text-red-400 text-xs mt-1">{errors.excerptEs}</p>}
+                </div>
 
-                  <div>
-                    <label className="block text-xs text-[var(--text-muted)] mb-1">Title EN</label>
-                    <input
-                      value={form.titleEn}
-                      onChange={(e) => setForm({ ...form, titleEn: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)]
-                                 text-[var(--text)] text-sm focus:outline-none focus:border-[var(--primary)] transition-colors"
-                    />
-                    {errors.titleEn && <p className="text-red-400 text-xs mt-1">{errors.titleEn}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-xs text-[var(--text-muted)] mb-1">Excerpt EN</label>
-                    <textarea
-                      rows={2}
-                      value={form.excerptEn}
-                      onChange={(e) => setForm({ ...form, excerptEn: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)]
-                                 text-[var(--text)] text-sm focus:outline-none focus:border-[var(--primary)] transition-colors resize-none"
-                    />
-                    {errors.excerptEn && <p className="text-red-400 text-xs mt-1">{errors.excerptEn}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-xs text-[var(--text-muted)] mb-1">Content EN</label>
-                    <textarea
-                      rows={6}
-                      value={form.contentEn}
-                      onChange={(e) => setForm({ ...form, contentEn: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)]
-                                 text-[var(--text)] text-sm focus:outline-none focus:border-[var(--primary)] transition-colors resize-none"
-                    />
-                    {errors.contentEn && <p className="text-red-400 text-xs mt-1">{errors.contentEn}</p>}
-                  </div>
+                <div>
+                  <label className="block text-xs text-[var(--text-muted)] mb-1">Contenido</label>
+                  <textarea
+                    rows={8}
+                    value={form.contentEs}
+                    onChange={(e) => setForm({ ...form, contentEs: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)]
+                               text-[var(--text)] text-sm focus:outline-none focus:border-[var(--primary)] transition-colors resize-none"
+                  />
+                  {errors.contentEs && <p className="text-red-400 text-xs mt-1">{errors.contentEs}</p>}
                 </div>
               </div>
 

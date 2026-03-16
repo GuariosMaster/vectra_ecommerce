@@ -58,7 +58,7 @@ try {
             slug={product.slug}
             name={lang === 'es' ? product.nameEs : product.nameEn}
             price={Number(product.price)}
-            image={product.images[0]?.url ?? '/images/placeholder.png'}
+            image={product.images[0]?.url ?? '/images/placeholder.svg'}
             category={product.category.slug}
             inStock={product.inStock}
             shortDescription={lang === 'es' ? product.shortDescEs : product.shortDescEn}

@@ -19,12 +19,13 @@ export async function fetchProducts(
 }
 
 export async function fetchProductBySlug(slug: string): Promise<ApiProduct> {
-  return apiFetch<ApiProduct>(`/api/v1/products/${slug}`);
+  const res = await apiFetch<{ data: ApiProduct }>(`/api/v1/products/${slug}`);
+  return res.data;
 }
 
 export async function fetchCategories(): Promise<ApiCategory[]> {
   const res = await apiFetch<{ data: ApiCategory[] }>('/api/v1/categories');
-  return res.data ?? (res as unknown as ApiCategory[]);
+  return res.data;
 }
 
 // ─── Admin endpoints (require token) ────────────────────────────────────────
@@ -36,7 +37,7 @@ export async function createProduct(form: ProductFormData, token: string): Promi
     body,
     token,
   });
-  return res.data ?? (res as unknown as ApiProduct);
+  return res.data;
 }
 
 export async function updateProduct(
@@ -50,7 +51,7 @@ export async function updateProduct(
     body,
     token,
   });
-  return res.data ?? (res as unknown as ApiProduct);
+  return res.data;
 }
 
 export async function deleteProduct(id: string, token: string): Promise<void> {
@@ -67,7 +68,7 @@ export function apiProductToCatalog(p: ApiProduct, lang: 'es' | 'en'): CatalogPr
     category: p.category.slug,
     inStock: p.inStock,
     shortDescription: lang === 'es' ? p.shortDescEs : p.shortDescEn,
-    image: p.images[0]?.url ?? '/images/placeholder.png',
+    image: p.images[0]?.url ?? '/images/placeholder.svg',
     featured: p.featured,
   };
 }
@@ -91,7 +92,7 @@ function toFormData(data: Partial<ProductFormData>): FormData {
     if (v !== undefined && v !== null) fd.append(k, String(v));
   });
 
-  if (tagIds) tagIds.forEach((id) => fd.append('tagIds[]', id));
+  if (tagIds) tagIds.forEach((id) => fd.append('tagIds', id));
   if (images) images.forEach((file) => fd.append('images', file));
 
   return fd;

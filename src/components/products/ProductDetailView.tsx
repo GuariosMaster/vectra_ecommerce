@@ -67,7 +67,7 @@ export default function ProductDetailView({ slug, lang }: Props) {
   const name = lang === 'es' ? product.nameEs : product.nameEn;
   const description = lang === 'es' ? product.descriptionEs : product.descriptionEn;
   const shortDescription = lang === 'es' ? product.shortDescEs : product.shortDescEn;
-  const image = product.images[0]?.url ?? '/images/placeholder.png';
+  const image = product.images[0]?.url ?? '/images/placeholder.svg';
   const tags = product.tags.map((t) => (lang === 'es' ? t.tag.nameEs : t.tag.nameEn));
   const price = Number(product.price);
 
@@ -94,8 +94,8 @@ export default function ProductDetailView({ slug, lang }: Props) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         {/* Image */}
-        <div className="rounded-2xl overflow-hidden bg-[var(--bg-secondary)] aspect-square">
-          <img src={image} alt={name} className="w-full h-full object-cover" loading="eager" />
+        <div className="rounded-2xl bg-[var(--bg-secondary)] aspect-square flex items-center justify-center p-6 overflow-hidden">
+          <img src={image} alt={name} className="w-full h-full object-contain" loading="eager" />
         </div>
 
         {/* Details */}

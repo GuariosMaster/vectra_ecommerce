@@ -21,12 +21,12 @@ const t = useTranslations(lang);
                 transition-all duration-300 flex flex-col">
 
   <!-- Image -->
-  <a href={`/${lang}/products/${slug}`} class="block overflow-hidden aspect-square bg-[var(--bg-secondary)]">
+  <a href={`/${lang}/products/${slug}`} class="block aspect-square bg-[var(--bg-secondary)] p-3 flex items-center justify-center overflow-hidden">
     <img
       src={image}
       alt={name}
       loading="lazy"
-      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+      class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
     />
   </a>
 

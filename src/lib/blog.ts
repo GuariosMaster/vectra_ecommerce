@@ -28,7 +28,7 @@ export async function fetchPosts(
 
 export async function fetchPostBySlug(slug: string): Promise<ApiPost> {
   const res = await apiFetch<{ data: ApiPost }>(`/api/v1/blog/${slug}`);
-  return (res as unknown as { data: ApiPost }).data ?? (res as unknown as ApiPost);
+  return res.data;
 }
 
 export async function createPost(form: PostFormData, token: string): Promise<ApiPost> {
@@ -37,7 +37,7 @@ export async function createPost(form: PostFormData, token: string): Promise<Api
     body: form,
     token,
   });
-  return (res as unknown as { data: ApiPost }).data ?? (res as unknown as ApiPost);
+  return res.data;
 }
 
 export async function updatePost(
@@ -50,7 +50,7 @@ export async function updatePost(
     body: form,
     token,
   });
-  return (res as unknown as { data: ApiPost }).data ?? (res as unknown as ApiPost);
+  return res.data;
 }
 
 export async function deletePost(id: string, token: string): Promise<void> {
