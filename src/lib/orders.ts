@@ -40,8 +40,8 @@ export async function updateOrderStatus(
 
 export async function createMpPreference(
   orderId: string
-): Promise<{ preferenceId: string; initPoint: string; sandboxInitPoint: string }> {
-  const res = await apiFetch<{ data: { preferenceId: string; initPoint: string; sandboxInitPoint: string } }>(
+): Promise<{ preferenceId: string; checkoutUrl: string }> {
+  const res = await apiFetch<{ data: { preferenceId: string; checkoutUrl: string } }>(
     `/api/v1/payments/mp/preference`,
     { method: 'POST', body: { orderId } },
   );

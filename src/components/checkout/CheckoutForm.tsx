@@ -132,9 +132,9 @@ export default function CheckoutForm({ lang }: Props) {
         guestEmail: form.email,
       });
 
-      const { initPoint } = await createMpPreference(order.id);
+      const { checkoutUrl } = await createMpPreference(order.id);
       clearCart();
-      window.location.href = initPoint;
+      window.location.href = checkoutUrl;
     } catch (err: unknown) {
       setApiError(err instanceof Error ? err.message : (lang === 'es' ? 'Error al procesar el pedido' : 'Error processing order'));
       setLoading(false);

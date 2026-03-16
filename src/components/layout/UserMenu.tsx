@@ -96,25 +96,8 @@ export default function UserMenu({ lang, menuMode = false }: Props) {
 
   /* ── Not authenticated ── */
   if (!auth.isAuthenticated) {
-    /* Versión menú hamburguesa: full-width, igual estilo que los otros ítems */
-    if (menuMode) {
-      return (
-        <a
-          href="/admin"
-          className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold
-                     transition-all duration-200"
-          style={{ color: 'var(--primary)', background: 'var(--primary-weak, rgba(192,38,211,0.08))' }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--primary-weak, rgba(192,38,211,0.15))')}
-          onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--primary-weak, rgba(192,38,211,0.08))')}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
-          {l.login}
-        </a>
-      );
-    }
+    /* Versión menú hamburguesa: no mostrar login de admin en móvil */
+    if (menuMode) return null;
     /* Versión header: botón compacto */
     return (
       <a
