@@ -1,7 +1,6 @@
 ---
-import ProductCard from '../products/ProductCard.astro';
+import FeaturedProductsClient from './FeaturedProductsClient';
 import { useTranslations, type Lang } from '../../i18n/ui';
-import type { ApiProduct } from '../../types/api';
 
 interface Props {
   lang: Lang;
@@ -9,78 +8,13 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-
-const apiUrl = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:3000';
-let featured: ApiProduct[] = [];
-try {
-  const res = await fetch(
-    `${apiUrl}/api/v1/products?featured=true&limit=4&lang=${lang.toUpperCase()}`,
-  );
-  if (res.ok) featured = (await res.json()).data ?? [];
-} catch {
-  // render empty on fetch failure
-}
 ---
 
-<section class="py-20 bg-[var(--bg)]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
-      <div>
-        <!-- Blue accent bar -->
-        <div class="flex items-center gap-2 mb-3">
-          <div class="w-6 h-0.5 rounded-full" style="background: var(--accent);"></div>
-          <span class="text-xs font-bold tracking-[0.2em] uppercase" style="color: var(--accent);">
-            {lang === 'es' ? 'Destacados' : 'Featured'}
-          </span>
-        </div>
-        <h2 class="text-3xl md:text-4xl font-black text-[var(--text)] mb-2">
-          {t('featured.title')}
-        </h2>
-        <p class="text-[var(--text-muted)]">{t('featured.subtitle')}</p>
-      </div>
-      <a
-        href={`/${lang}/products`}
-        class="hidden sm:inline-flex items-center gap-2 font-medium transition-colors"
-        style="color: var(--accent);"
-      >
-        {t('featured.viewAll')}
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-        </svg>
-      </a>
-    </div>
-
-    {featured.length > 0 ? (
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {featured.map((product) => (
-          <ProductCard
-            lang={lang}
-            slug={product.slug}
-            name={lang === 'es' ? product.nameEs : product.nameEn}
-            price={Number(product.price)}
-            image={product.images[0]?.url ?? '/images/placeholder.svg'}
-            category={product.category.slug}
-            inStock={product.inStock}
-            shortDescription={lang === 'es' ? product.shortDescEs : product.shortDescEn}
-          />
-        ))}
-      </div>
-    ) : (
-      <div class="text-center py-12 text-[var(--text-muted)]">
-        {lang === 'es' ? 'Cargando productos...' : 'Loading products...'}
-      </div>
-    )}
-
-    <div class="mt-8 text-center sm:hidden">
-      <a
-        href={`/${lang}/products`}
-        class="inline-flex items-center gap-2 text-[var(--primary)] font-medium hover:underline"
-      >
-        {t('featured.viewAll')}
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-        </svg>
-      </a>
-    </div>
-  </div>
-</section>
+<FeaturedProductsClient
+  client:load
+  lang={lang}
+  accentLabel={lang === 'es' ? 'Destacados' : 'Featured'}
+  titleLabel={t('featured.title')}
+  subtitleLabel={t('featured.subtitle')}
+  viewAllLabel={t('featured.viewAll')}
+/>
