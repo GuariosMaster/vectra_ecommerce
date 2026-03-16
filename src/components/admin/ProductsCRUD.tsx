@@ -209,9 +209,16 @@ export default function ProductsCRUD() {
         {products.map((p) => (
           <div key={p.id} className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-4">
             <div className="flex items-start justify-between gap-2 mb-2">
-              <div className="min-w-0">
-                <p className="font-semibold text-[var(--text)] text-sm truncate">{p.nameEs}</p>
-                <p className="text-[var(--primary)] font-bold text-base mt-0.5">${Number(p.price).toFixed(2)}</p>
+              <div className="flex items-center gap-3 min-w-0">
+                <img
+                  src={p.images[0]?.url ?? '/images/placeholder.svg'}
+                  alt={p.nameEs}
+                  className="w-12 h-12 rounded-xl object-contain bg-[var(--bg-secondary)] border border-[var(--border)] shrink-0"
+                />
+                <div className="min-w-0">
+                  <p className="font-semibold text-[var(--text)] text-sm truncate">{p.nameEs}</p>
+                  <p className="text-[var(--primary)] font-bold text-base mt-0.5">${Number(p.price).toFixed(2)}</p>
+                </div>
               </div>
               <span className={`px-2 py-1 rounded-full text-xs shrink-0 ${p.inStock ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
                 {p.inStock ? 'En stock' : 'Sin stock'}
@@ -266,7 +273,16 @@ export default function ProductsCRUD() {
             )}
             {products.map((p) => (
               <tr key={p.id} className="hover:bg-[var(--bg-secondary)] transition-colors">
-                <td className="px-4 py-3 text-[var(--text)] font-medium">{p.nameEs}</td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={p.images[0]?.url ?? '/images/placeholder.svg'}
+                      alt={p.nameEs}
+                      className="w-10 h-10 rounded-lg object-contain bg-[var(--bg-secondary)] border border-[var(--border)] shrink-0"
+                    />
+                    <span className="font-medium text-[var(--text)]">{p.nameEs}</span>
+                  </div>
+                </td>
                 <td className="px-4 py-3 text-[var(--text)]">${Number(p.price).toFixed(2)}</td>
                 <td className="px-4 py-3">
                   <span className="px-2 py-1 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] text-xs">
