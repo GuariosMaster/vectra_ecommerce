@@ -4,7 +4,7 @@ interface Props {
   size?: 'sm' | 'md';
 }
 const { lang, size = 'md' } = Astro.props;
-const px = size === 'sm' ? 40 : 48;
+const px = size === 'sm' ? 41 : 51;
 ---
 
 <a
@@ -14,13 +14,15 @@ const px = size === 'sm' ? 40 : 48;
 >
   <!-- Logo image -->
   <div class="vectra-logo__icon relative flex-shrink-0">
-    <img
-      src="/images/vectra_logo.png"
-      alt="Vectra logo"
-      width={px}
-      height={px}
-      style="object-fit: contain; border-radius: 8px;"
-    />
+    <div class="vectra-logo__border" style={`width:${px}px; height:${px}px;`}>
+      <img
+        src="/images/vectra_logo2.png"
+        alt="Vectra logo"
+        width={px}
+        height={px}
+        style="object-fit: contain; width:100%; height:100%; display:block;"
+      />
+    </div>
   </div>
 
   <!-- VECTRA wordmark -->
@@ -31,23 +33,43 @@ const px = size === 'sm' ? 40 : 48;
 </a>
 
 <style>
-  /* ── Idle: slow glow pulse on the icon ── */
+  /* ── Borde neon fucsia ── */
+  .vectra-logo__border {
+    border-radius: 12px;
+    border: 1.5px solid #e800ff;
+    padding: 4px;
+    box-shadow:
+      0 0 4px #e800ff55,
+      0 0 8px #e800ff22;
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+  }
+
+  @keyframes vl-border-pulse {
+    0%, 100% {
+      box-shadow:
+        0 0 4px #e800ff88,
+        0 0 12px #e800ff33,
+        inset 0 0 4px #e800ff11;
+    }
+    50% {
+      box-shadow:
+        0 0 8px #e800ffcc,
+        0 0 22px #e800ff66,
+        0 0 40px #e800ff22,
+        inset 0 0 8px #e800ff33;
+    }
+  }
+
+  /* ── Idle: drop-shadow suave en la imagen ── */
   .vectra-logo__icon {
-    animation: vl-pulse 4s ease-in-out infinite;
-    transition: transform 0.25s ease, filter 0.25s ease;
+    transition: transform 0.25s ease;
   }
 
-  @keyframes vl-pulse {
-    0%, 100% { filter: drop-shadow(0 0 2px var(--glow-weak)); }
-    50%       { filter: drop-shadow(0 0 8px var(--glow));      }
-  }
-
-  /* ── Hover: snap to full glow + slight lift ── */
-  .vectra-logo:hover .vectra-logo__icon,
-  .vectra-logo:focus-visible .vectra-logo__icon {
-    animation: none;
+  /* ── Hover: borde y glow más intensos ── */
+  .vectra-logo:hover .vectra-logo__border,
+  .vectra-logo:focus-visible .vectra-logo__border {
     transform: scale(1.06) translateY(-1px);
-    filter: drop-shadow(0 0 11px var(--glow));
+    animation: vl-border-pulse 1.2s ease-in-out infinite;
   }
 
   /* ── Hover: shimmer sweep across wordmark ── */

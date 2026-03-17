@@ -96,8 +96,23 @@ export default function UserMenu({ lang, menuMode = false }: Props) {
 
   /* ── Not authenticated ── */
   if (!auth.isAuthenticated) {
-    /* Versión menú hamburguesa: no mostrar login de admin en móvil */
-    if (menuMode) return null;
+    /* Versión menú hamburguesa: botón full-width */
+    if (menuMode) {
+      return (
+        <a
+          href="/admin"
+          className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold
+                     transition-all duration-200"
+          style={{ color: 'var(--primary)', border: '1px solid var(--primary)', boxShadow: '0 0 10px var(--glow-weak)' }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          {l.login}
+        </a>
+      );
+    }
     /* Versión header: botón compacto */
     return (
       <a
