@@ -11,7 +11,7 @@ const t = useTranslations(lang);
 ---
 
 <FeaturedProductsClient
-  client:load
+  client:only="react"
   lang={lang}
   accentLabel={lang === 'es' ? 'Destacados' : 'Featured'}
   titleLabel={t('featured.title')}

@@ -4,7 +4,7 @@ interface Props {
   size?: 'sm' | 'md';
 }
 const { lang, size = 'md' } = Astro.props;
-const px = size === 'sm' ? 30 : 36;
+const px = size === 'sm' ? 40 : 48;
 ---
 
 <a
@@ -12,47 +12,15 @@ const px = size === 'sm' ? 30 : 36;
   class="vectra-logo group inline-flex items-center gap-2.5 flex-shrink-0 select-none outline-none"
   aria-label="Vectra home"
 >
-  <!-- Geometric V mark -->
+  <!-- Logo image -->
   <div class="vectra-logo__icon relative flex-shrink-0">
-    <svg
-      width={px} height={px}
-      viewBox="0 0 36 36"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <!-- Blue → fuchsia gradient along V (left arm: top-left to center-bottom) -->
-        <linearGradient id="vg-left" x1="8" y1="12" x2="18" y2="26" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stop-color="#60a5fa"/>
-          <stop offset="100%" stop-color="var(--primary)"/>
-        </linearGradient>
-        <!-- Blue → fuchsia gradient along V (right arm: top-right to center-bottom) -->
-        <linearGradient id="vg-right" x1="28" y1="12" x2="18" y2="26" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stop-color="#60a5fa"/>
-          <stop offset="100%" stop-color="var(--primary)"/>
-        </linearGradient>
-        <!-- Subtle border gradient -->
-        <linearGradient id="vg-border" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stop-color="#60a5fa" stop-opacity="0.6"/>
-          <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.6"/>
-        </linearGradient>
-      </defs>
-
-      <!-- Rounded rect container — neutral gray (Claude-style dark) -->
-      <rect
-        x="1" y="1" width="34" height="34" rx="9"
-        fill="#2a2a2e"
-        stroke="url(#vg-border)"
-        stroke-width="1"
-      />
-      <!-- Top precision ticks — blue tint -->
-      <line x1="7"  y1="11.5" x2="12" y2="11.5" stroke="#60a5fa" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
-      <line x1="24" y1="11.5" x2="29" y2="11.5" stroke="#60a5fa" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
-      <!-- V left arm (blue → fuchsia) -->
-      <line x1="8"  y1="12" x2="18" y2="26" stroke="url(#vg-left)"  stroke-width="2.4" stroke-linecap="round"/>
-      <!-- V right arm (blue → fuchsia) -->
-      <line x1="28" y1="12" x2="18" y2="26" stroke="url(#vg-right)" stroke-width="2.4" stroke-linecap="round"/>
-    </svg>
+    <img
+      src="/images/vectra_logo.png"
+      alt="Vectra logo"
+      width={px}
+      height={px}
+      style="object-fit: contain; border-radius: 8px;"
+    />
   </div>
 
   <!-- VECTRA wordmark -->
